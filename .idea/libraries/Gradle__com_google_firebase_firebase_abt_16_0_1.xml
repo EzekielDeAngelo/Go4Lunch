@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.firebase:firebase-abt-16.0.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-firebase-abt-16.0.1.aar/e495d7726edbc57d6bf944a4f51859b6/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-firebase-abt-16.0.1.aar/e495d7726edbc57d6bf944a4f51859b6/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

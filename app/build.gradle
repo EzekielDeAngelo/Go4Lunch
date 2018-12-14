@@ -27,4 +27,21 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    // Firebase
+    //implementation 'com.google.firebase:firebase-analytics:16.0.6'
+    //implementation 'com.google.firebase:firebase-database:16.0.5'
+    //implementation 'com.google.firebase:firebase-storage:16.0.5'
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
+    implementation 'com.google.firebase:firebase-config:16.1.2'
+
+    //implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
+    //implementation 'com.google.firebase:firebase-appindexing:17.1.0'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    // Facebook
+    implementation 'com.facebook.android:facebook-login:4.38.1'
+
 }
+apply plugin: 'com.google.gms.google-services'
