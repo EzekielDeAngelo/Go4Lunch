@@ -1,15 +1,11 @@
 package antho.com.go4lunch;
-
+/** Main Activity **/
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -17,16 +13,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-
+/** **/
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
+{
     private TextView mTextMessage;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -43,14 +36,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         {
             switch (item.getItemId())
             {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                case R.id.navigation_map:
+                    mTextMessage.setText(R.string.title_map);
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                case R.id.navigation_list:
+                    mTextMessage.setText(R.string.title_list);
                     return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                case R.id.navigation_workmates:
+                    mTextMessage.setText(R.string.title_workmates);
                     return true;
             }
             return false;
@@ -63,12 +56,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
 
@@ -94,16 +84,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
         }
-
     }
+    //
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
+    //
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         switch (item.getItemId())
         {
             case R.id.sign_out_menu:
@@ -118,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    //
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
     }
 }

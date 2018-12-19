@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -28,6 +30,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Arrays;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 /** Handles Google and Facebook sign in functions **/
@@ -35,7 +39,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 {
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
-    private SignInButton mSignInButton;
+    private Button mSignInButton;
     private GoogleApiClient mGoogleApiClient;
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
@@ -46,7 +50,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         // Assign fields
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        mSignInButton = (Button) findViewById(R.id.google_login_button);
         // Set click listeners
         mSignInButton.setOnClickListener(this);
         // Configure Google Sign In
@@ -63,9 +67,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email", "public_profile");
-        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
@@ -85,6 +87,15 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 // ...
             }
         });
+        Button facebookLogin = (Button)findViewById(R.id.facebook_login_button);
+
+        facebookLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logInWithReadPermissions(SignInActivity.this, Arrays.asList("public_profile", "user_friends"));
+            }
+        });
+
     }
     //
     @Override
@@ -92,7 +103,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     {
         switch (v.getId())
         {
-            case R.id.sign_in_button:
+            case R.id.google_login_button:
                 signIn();
                 break;
         }

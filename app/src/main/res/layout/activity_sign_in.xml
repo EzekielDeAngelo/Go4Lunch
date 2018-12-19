@@ -1,40 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sign_in_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/colorPrimary"
-    style="@style/Theme.AppCompat.Light.NoActionBar">
-
+    android:background="@color/colorPrimary">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
+        android:textAlignment="center"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:id="@+id/logo"
         android:text="@string/sign_in"/>
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/google_login_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="visible"
-        android:layout_gravity="center"
-        android:text="Sign in with Google"
-       />
-    <com.facebook.login.widget.LoginButton
-        xmlns:facebook="http://schemas.android.com/apk/res-auto"
-
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:onClick="onClick"
+        android:background="@color/google_color"
+        android:text="@string/google_sign_in"
+        android:textColor="@color/google_font"
+        android:textStyle="bold"
+        android:padding="20dp"/>
+    <Button
+        android:id="@+id/facebook_login_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        style="@style/FacebookLoginButton"
-        facebook:com_facebook_login_text="Sign in with Facebook"
-        android:layout_marginTop="50dp"
-         />
-</FrameLayout>
+        android:layout_marginBottom="50dp"
+        android:onClick="onClick"
+        android:background="@color/facebook_color"
+        android:text="@string/facebook_sign_in"
+        android:textColor="@color/facebook_font"
+        android:textStyle="bold"
+        android:padding="20dp"/>
+</LinearLayout>

@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_map">Map View</string>
+    <string name="title_list">List View</string>
+    <string name="title_workmates">Workmates</string>
 
     <string name="sign_in">Logo</string>
 
-    <string name="facebook_app_id">224572028439433</string> <string name="fb_login_protocol_scheme">fb224572028439433</string>
-
+    <string name="facebook_app_id">224572028439433</string>
+    <string name="fb_login_protocol_scheme">fb224572028439433</string>
+    <string name="facebook_sign_in">SIGN IN WITH FACEBOOK</string>
+    <string name="google_sign_in">SIGN IN WITH GOOGLE</string>
 
 
     <string name="welcome_msg">Welcome!</string>
