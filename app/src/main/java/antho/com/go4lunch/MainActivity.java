@@ -4,10 +4,13 @@ package antho.com.go4lunch;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -33,6 +36,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.List;
+
 /** **/
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     @BindView(R.id.navigation)
@@ -51,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final String LIST_VIEW_TAG = "LIST_VIEW_TAG";
     private static final String WORKMATES_TAG = "WORKMATES_TAG";
     protected GeoDataClient mGeoDataClient;
-
+    public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 99;
+    boolean mLocationPermissionGranted;
     //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         loadFirstFragment(selectedIndex);
         setUpBottomNavigation();
         // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(this);
+/*        mGeoDataClient = Places.getGeoDataClient(this);
 
         // Construct a PlaceDetectionClient.
         PlaceDetectionClient mPlaceDetectionClient = Places.getPlaceDetectionClient(this);
@@ -98,9 +104,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for Activity#requestPermissions for more details.
+
             return;
         }
-        mPlaceDetectionClient.getCurrentPlace(null);
+        mPlaceDetectionClient.getCurrentPlace(null);*/
 
         // TODO: Start using the Places API.
 
@@ -212,11 +219,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     {
 
     }
+/*
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }*/
 }
 
 
 
         /*if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED))
-                {/*whatever*/}
-*/
+                /*{whatever}*/
+
 
