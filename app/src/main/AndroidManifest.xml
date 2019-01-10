@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SignInActivity"
+            android:name=".view.activities.SignInActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data
