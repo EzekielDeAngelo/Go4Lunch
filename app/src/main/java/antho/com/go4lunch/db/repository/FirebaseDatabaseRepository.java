@@ -1,5 +1,7 @@
 package antho.com.go4lunch.db.repository;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -20,12 +22,14 @@ public abstract class FirebaseDatabaseRepository<Model>
     public FirebaseDatabaseRepository(FirebaseMapper mapper)
     {
         databaseReference = FirebaseDatabase.getInstance().getReference(getRootNode());
+        databaseReference.child("restaurants").child("name").setValue("Mcdo");
         this.mapper = mapper;
     }
 
     public void addListener(FirebaseDatabaseRepositoryCallback<Model> firebaseCallback)
     {
         this.firebaseCallback = firebaseCallback;
+        Log.d("TEST", "azerty");
         listener = new BaseValueEventListener(mapper, firebaseCallback);
         databaseReference.addValueEventListener(listener);
     }
@@ -41,4 +45,3 @@ public abstract class FirebaseDatabaseRepository<Model>
         void onError(Exception e);
     }
 }
-

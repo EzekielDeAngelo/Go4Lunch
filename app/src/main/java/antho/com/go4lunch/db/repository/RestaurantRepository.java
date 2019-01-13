@@ -13,6 +13,6 @@ public class RestaurantRepository extends FirebaseDatabaseRepository<Restaurant>
     @Override
     protected String getRootNode()
     {
-        return "articles";
+        return "restaurants";
     }
 }

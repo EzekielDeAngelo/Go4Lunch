@@ -1,5 +1,8 @@
 package antho.com.go4lunch.viewmodel;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -19,6 +22,7 @@ public class RestaurantViewModel extends ViewModel
         if (restaurants == null)
         {
             restaurants = new MutableLiveData<List<Restaurant>>();
+
             loadRestaurants();
         }
         return restaurants;
@@ -37,6 +41,17 @@ public class RestaurantViewModel extends ViewModel
             @Override
             public void onSuccess(List<Restaurant> result)
             {
+             /*   Restaurant restaurant = new Restaurant();
+                restaurant.setName("Restaurant1");
+                result.add(restaurant);
+                restaurant = new Restaurant();
+                restaurant.setName("Restaurant2");
+                result.add(restaurant);
+                restaurant = new Restaurant();
+                restaurant.setName("Restaurant3");
+                result.add(restaurant);*/
+
+                restaurants.setValue(result);
             }
 
             @Override

@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.fragments.ListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.RecyclerView
+
+</FrameLayout>-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/restaurant_recycler_view"
+        android:id="@+id/restaurant_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-</FrameLayout>
+
+</RelativeLayout>

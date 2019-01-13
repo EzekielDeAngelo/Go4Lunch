@@ -8,14 +8,8 @@ public class RestaurantMapper extends FirebaseMapper<RestaurantEntity, Restauran
     @Override
     public Restaurant map(RestaurantEntity restaurantEntity)
     {
-        Restaurant restaurant = new Restaurant()
-        {
-            @Override
-            public String getName() {
-                return null;
-            }
-        };
-        //restaurant.setName(restaurantEntity.getName());
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(restaurantEntity.getName());
         return restaurant;
     }
 

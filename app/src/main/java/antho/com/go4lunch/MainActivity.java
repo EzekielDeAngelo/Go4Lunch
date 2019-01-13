@@ -25,6 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,41 +59,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mUsername = ANONYMOUS;
 
 // Write a message to the database
-/*
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-        myRef.setValue("Hello, World!");
-        myRef.addValueEventListener(new ValueEventListener() {
 
-            @Override
-
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // This method is called once with the initial value and again
-
-                // whenever data at this location is updated.
-
-                String value = dataSnapshot.getValue(String.class);
-
-                Log.d(TAG, "Value is: " + value);
-
-            }
-
-
-
-            @Override
-
-            public void onCancelled(DatabaseError error) {
-
-                // Failed to read value
-
-                Log.w(TAG, "Failed to read value.", error.toException());
-
-            }
-
-        });
-
-        myRef.setValue("Hello, World!");*/
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
@@ -166,6 +133,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     if (fragmentMap == null) fragmentMap = MapsFragment.newInstance();
                     changeFragment(fragmentMap, MAP_VIEW_TAG);
                     return true;
+                case R.id.navigation_list:
+
+                    Fragment fragmentList = fragmentManager.findFragmentByTag(LIST_VIEW_TAG);
+                    if (fragmentList == null) fragmentList = ListFragment.newInstance();
+                    changeFragment(fragmentList, LIST_VIEW_TAG);
+                    return true;
+
 
             }
             return false;

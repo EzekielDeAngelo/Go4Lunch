@@ -1,5 +1,6 @@
 package antho.com.go4lunch.view.fragments.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,19 +12,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.model.Restaurant;
+import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.RestaurantViewHolder>
 {
     //private final OnRestaurantClickListener listener;
-    private final List<Restaurant> data = new ArrayList<>();
+    private final List<Restaurant> restaurants;// = new ArrayList<>();
     // Constructor
-    public RestaurantsAdapter (List<Restaurant> restaurants/*OnRestaurantClickListener listener*/) {
+    public RestaurantsAdapter (/*RestaurantViewModel viewModel, LifecycleOwner owner*/List<Restaurant> restaurants/*OnRestaurantClickListener listener*/) {
         //this.listener = listener;
+        //viewModel.getRestaurants().observe(owner, this::setData);
+        this.restaurants = restaurants;
+
     }
     @NonNull
     @Override
@@ -36,19 +43,36 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position)
     {
-        holder.bind(data.get(position));
+
+        holder.bind(restaurants.get(position));
     }
     @Override
     public int getItemCount()
     {
-        return data.size();
+        return restaurants.size();
     }
     // Add news list data if available
     /*public interface OnRestaurantClickListener
     {
         void onItemClicked();
     }*/
+    public void setData(List<Restaurant> restaurants)
+    {
 
+        if (restaurants != null)
+        {
+            //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new NewsDiffCallback(data, newsList));
+            restaurants.clear();
+            restaurants.addAll(restaurants);
+            //diffResult.dispatchUpdatesTo(this);
+        }
+        else
+        {
+            restaurants.clear();
+            notifyDataSetChanged();
+        }
+        notifyDataSetChanged();
+    }
     static final class RestaurantViewHolder extends RecyclerView.ViewHolder
     {
         @BindView(R.id.section)
@@ -63,7 +87,9 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         void bind(Restaurant restaurant)
         {
             this.restaurant = restaurant;
+            test.setText(restaurant.getName());
 
         }
     }
 }
+
