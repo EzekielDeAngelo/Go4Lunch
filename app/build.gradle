@@ -50,8 +50,21 @@ dependencies {
     // Viewmodel & Lifecycle
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation 'android.arch.lifecycle:runtime:1.1.1'
-
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+    // Autovalue
+    compileOnly "com.google.auto.value:auto-value:$autoValueVersion"
+    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
+    // Moshi
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    annotationProcessor "com.ryanharter.auto.value:auto-value-moshi:$autoValueMoshiVersion"
+    compileOnly "com.ryanharter.auto.value:auto-value-moshi-annotations:$autoValueMoshiVersion"
+    // Rx
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rxCallAdapterVersion"
     //
     implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation "com.android.support:recyclerview-v7:$supportVersion"

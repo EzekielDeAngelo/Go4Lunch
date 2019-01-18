@@ -53,12 +53,18 @@ public class ParserTask extends AsyncTask<String, Integer, List<HashMap<String, 
             double lat = Double.parseDouble(hmPlace.get("lat"));
             // Getting longitude of the place
             double lng = Double.parseDouble(hmPlace.get("lng"));
+            String openingHours = hmPlace.get("opening_hours");
+            Log.d("Map", "place:" + openingHours);
+            //
+            String placeId = hmPlace.get("place_id");
+            Log.d("Map", "place:" + placeId);
             // Getting name
             String name = hmPlace.get("place_name");
 
             Log.d("Map", "place: " + name);
             // Getting vicinity
             String vicinity = hmPlace.get("vicinity");
+
             LatLng latLng = new LatLng(lat, lng);
             ArrayList<LatLng> restaurants = new ArrayList<LatLng>();
             restaurants.add(latLng);

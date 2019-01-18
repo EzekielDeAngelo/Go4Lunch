@@ -87,7 +87,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         void bind(Restaurant restaurant)
         {
             this.restaurant = restaurant;
-            test.setText(restaurant.getName());
+            test.setText(restaurant.name());
 
         }
     }

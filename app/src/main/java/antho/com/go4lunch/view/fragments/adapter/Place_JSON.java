@@ -55,28 +55,39 @@ public class Place_JSON
     private HashMap<String, String> getPlace(JSONObject jPlace)
     {
         HashMap<String, String> place = new HashMap<String, String>();
+        String placeId = "-NA-";
         String placeName = "-NA-";
+        String openingHours = "-NA";
         String vicinity = "-NA-";
         String latitude = "";
         String longitude = "";
         String reference = "";
         try
         {
+            placeId = jPlace.getString("place_id");
             // Extracting Place name, if available
             if (!jPlace.isNull("name"))
             {
                 placeName = jPlace.getString("name");
+            }
+            //
+            if (!jPlace.isNull("opening_hours"))
+            {
+                openingHours = jPlace.getJSONObject("opening_hours").getString("open_now");
             }
             // Extracting Place Vicinity, if available
             if (!jPlace.isNull("vicinity"))
             {
                 vicinity = jPlace.getString("vicinity");
             }
+
             latitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lng");
-            reference = jPlace.getString("reference");
 
+            reference = jPlace.getString("reference");
+            place.put("place_id", placeId);
             place.put("place_name", placeName);
+            place.put("opening_hours", openingHours);
             place.put("vicinity", vicinity);
             place.put("lat", latitude);
             place.put("lng", longitude);

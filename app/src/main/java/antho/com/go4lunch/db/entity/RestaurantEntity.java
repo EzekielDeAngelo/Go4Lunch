@@ -8,6 +8,7 @@ import antho.com.go4lunch.model.Restaurant;
 public class RestaurantEntity
 {
     private String name;
+    private String id;
 
     public RestaurantEntity() {}
 
@@ -17,5 +18,12 @@ public class RestaurantEntity
 
     public void setName(String name) {
         this.name = name;
+    }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

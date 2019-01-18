@@ -3,19 +3,10 @@ package antho.com.go4lunch;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
-import antho.com.go4lunch.view.activities.SignInActivity;
-import antho.com.go4lunch.view.fragments.ListFragment;
-import antho.com.go4lunch.view.fragments.MapsFragment;
-import antho.com.go4lunch.viewmodel.RestaurantViewModel;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -25,11 +16,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import antho.com.go4lunch.view.activities.SignInActivity;
+import antho.com.go4lunch.view.fragments.ListFragment;
+import antho.com.go4lunch.view.fragments.MapsFragment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /** **/
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
