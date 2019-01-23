@@ -76,7 +76,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     static final class RestaurantViewHolder extends RecyclerView.ViewHolder
     {
         @BindView(R.id.section)
-        TextView test;
+        TextView name;
         private Restaurant restaurant;
         RestaurantViewHolder(View itemView/*, OnRestaurantClickListener listener*/)
         {
@@ -87,7 +87,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         void bind(Restaurant restaurant)
         {
             this.restaurant = restaurant;
-            test.setText(restaurant.name());
+            name.setText(restaurant.name());
 
         }
     }

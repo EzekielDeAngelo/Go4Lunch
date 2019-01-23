@@ -12,6 +12,8 @@ public abstract class Restaurant
     public abstract String name();
     @Json(name="place_id")
     public abstract String placeId();
+    @Json(name="geometry")
+    public abstract RestaurantGeometry geometry();
 
     public static JsonAdapter<Restaurant> jsonAdapter(Moshi moshi)
     {

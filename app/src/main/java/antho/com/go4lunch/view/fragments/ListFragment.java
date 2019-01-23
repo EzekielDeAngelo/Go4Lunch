@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 
+import androidx.lifecycle.ViewModelStore;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
@@ -16,6 +18,7 @@ import antho.com.go4lunch.base.BaseFragment;
 import antho.com.go4lunch.model.Restaurant;
 import antho.com.go4lunch.view.fragments.adapter.RestaurantsAdapter;
 import antho.com.go4lunch.viewmodel.RestaurantViewModel;
+import antho.com.go4lunch.viewmodel.ViewModelFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -56,8 +59,13 @@ public class ListFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        Double lat = -122.084;//mLastKnownLocation.getLongitude();
+        Double lng = 37.4219983;//mLastKnownLocation.getLatitude();
+        String location = lng.toString() + "," + lat.toString();
+        super.onViewCreated(view, savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this).get(RestaurantViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get("RestaurantViewModel", RestaurantViewModel.class);
+        //viewModel = ViewModelProviders.of(this).get(RestaurantViewModel.class);
         restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         //restaurantRecyclerView.setAdapter(new RestaurantsAdapter(viewModel, this));
 
@@ -66,6 +74,7 @@ public class ListFragment extends BaseFragment {
             @Override
             public void onChanged(@Nullable List<Restaurant> restaurants)
             {
+
                 restaurantRecyclerView.setAdapter(new RestaurantsAdapter(restaurants));
             }
         });

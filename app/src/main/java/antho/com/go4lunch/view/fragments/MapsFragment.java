@@ -7,13 +7,21 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import antho.com.go4lunch.base.BaseFragment;
 import antho.com.go4lunch.R;
+import antho.com.go4lunch.model.Restaurant;
 import antho.com.go4lunch.view.fragments.adapter.PlacesTask;
+import antho.com.go4lunch.view.fragments.adapter.RestaurantsAdapter;
+import antho.com.go4lunch.viewmodel.RestaurantViewModel;
+import antho.com.go4lunch.viewmodel.ViewModelFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,18 +40,24 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.List;
 
 
 public class MapsFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnPoiClickListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener
 {
     SupportMapFragment mapFragment;
-    @BindView(R.id.button) Button button;
+    //@BindView(R.id.button) Button button;
+    private RestaurantViewModel viewModel;
     // The entry points to the Places API.
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
@@ -70,13 +84,15 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     public MapsFragment() {}
     //
     public static MapsFragment newInstance()
-    {
+        {
         return new MapsFragment();
     }
     //
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    {getDeviceLocation();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         ButterKnife.bind(this, view);
@@ -92,6 +108,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
             FragmentTransaction ft = fm.beginTransaction();
             mapFragment = SupportMapFragment.newInstance();
             ft.replace(R.id.map, mapFragment).commit();
+
         }
         mapFragment.getMapAsync(this);
         //mGeoDataClient = Places.getGeoDataClient(getContext());
@@ -106,6 +123,13 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         return view;
     }
     //
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+
+        super.onViewCreated(view, savedInstanceState);
+
+    }
+    //
     @Override
     public void onMapReady(GoogleMap map)
     {
@@ -113,10 +137,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
 
         updateLocationUI();
         getDeviceLocation();
-        button.setOnClickListener(v ->
-        {
-            markRestaurants();
-        });
+
+
+
+
 
         //mMap.setOnPoiClickListener(this);
         //mMap.addMarker(new MarkerOptions().position(mDefaultLocation).title("Home Marker"));
@@ -195,6 +219,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         }
         updateLocationUI();
     }
+    public Double lat;
+    private Double lng;
     // Get the best and most recent location of the device, which may be null in rare cases when a location is not available.
     private void getDeviceLocation()
     {
@@ -220,7 +246,28 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                             //Log.e(TAG, "Exception: %s", task.getException());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            mLastKnownLocation.setLatitude(mDefaultLocation.latitude);
+                            mLastKnownLocation.setLongitude(mDefaultLocation.longitude);
                         }
+                        lng = mLastKnownLocation.getLongitude();
+                        lat = mLastKnownLocation.getLatitude();
+                        String parsedLocation = lat.toString() + "," + lng.toString();
+                        viewModel = ViewModelProviders.of(getActivity(), new ViewModelFactory(parsedLocation)).get("RestaurantViewModel", RestaurantViewModel.class);
+
+                        viewModel.getRestaurants().observe(getActivity(), new Observer<List<Restaurant>>() {
+                            @Override
+                            public void onChanged(@Nullable List<Restaurant> restaurants)
+                            {
+
+                                MarkerOptions markerOptions = new MarkerOptions();
+                                LatLng latLng = new LatLng(Double.parseDouble(restaurants.get(2).geometry().location().latitude()), Double.parseDouble(restaurants.get(2).geometry().location().longitude()));
+                                markerOptions.position(latLng);
+                                markerOptions.title(restaurants.get(2).name());
+                                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                                // Placing a marker on the touched position
+                                 Marker m = mMap.addMarker(markerOptions);
+                                }
+                        });
                     }
                 });
             }
@@ -232,20 +279,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     }
 
 
-    public StringBuilder sbMethod()
-    {
-        double mLatitude = mLastKnownLocation.getLatitude();
-        double mLongitude = mLastKnownLocation.getLongitude();
-        StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        sb.append("location=" + mLatitude + "," + mLongitude);
-        sb.append("&radius=1000");
-        sb.append("&types=" + "restaurant");
-        sb.append("&sensor=true");
-        sb.append("&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0");
-        Log.d("Map", "api: " + sb.toString());
-
-        return sb;
-    }
     //
     @Override
     public boolean onMyLocationButtonClick()
@@ -278,9 +311,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         {
             return;
         }
-        StringBuilder sbValue = new StringBuilder(sbMethod());
-        PlacesTask placesTask = new PlacesTask();
-        placesTask.execute(sbValue.toString());
+
+        //StringBuilder sbValue = new StringBuilder(sbMethod());
+        //PlacesTask placesTask = new PlacesTask();
+        //placesTask.execute(sbValue.toString());
     }
     // Return fragment layout
     @Override
