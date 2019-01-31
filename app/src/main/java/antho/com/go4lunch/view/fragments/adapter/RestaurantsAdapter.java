@@ -4,7 +4,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -77,6 +81,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     {
         @BindView(R.id.section)
         TextView name;
+        @BindView(R.id.thumbnail)
+        ImageView thumbnail;
         private Restaurant restaurant;
         RestaurantViewHolder(View itemView/*, OnRestaurantClickListener listener*/)
         {
@@ -88,7 +94,10 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         {
             this.restaurant = restaurant;
             name.setText(restaurant.name());
-
+            Picasso.Builder builder = new Picasso.Builder(thumbnail.getContext());
+            builder.downloader(new OkHttp3Downloader(thumbnail.getContext()));
+            builder.build().load(restaurant.)
+                    .into(thumbnail);
         }
     }
 }

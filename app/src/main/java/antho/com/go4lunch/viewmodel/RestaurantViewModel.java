@@ -3,11 +3,14 @@ package antho.com.go4lunch.viewmodel;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -59,36 +62,44 @@ public class RestaurantViewModel extends ViewModel
                     for (int i = 0; i < restaurantList.results().size(); i++)
                     {
                         databaseReference.child(restaurantList.results().get(i).placeId()).setValue(restaurantList.results().get(i).placeId());
-                        databaseReference.child(restaurantList.results().get(i).placeId()).child("name").setValue(restaurantList.results().get(i).name());
-                    }
-                    restaurants.postValue(restaurantList.results());
+                        Call<PlacesResponse> restaurantCall = RestaurantApi.getInstance().getRestaurants(restaurantList.results().get(i).placeId());
 
-                    Call<PlacesResponse> restaurantCall = RestaurantApi.getInstance().getRestaurants(restaurantList.results().get(0).placeId());
+                        restaurantCall.enqueue(new retrofit2.Callback<PlacesResponse>() {
+                            @Override
+                            public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
 
-                    restaurantCall.enqueue(new retrofit2.Callback<PlacesResponse>() {
-                        @Override
-                        public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response)
-                        {
-                            /*Call restaurantPhoto = RestaurantApi.getInstance().getRestaurantPhoto(response.body().result().photos().get(0).url());
-                            restaurantPhoto.enqueue(new Callback() {
+                                //Call restaurantPhoto = RestaurantApi.getInstance().getRestaurantPhoto(response.body().result().photos().get(0).url());
+                                String url ="https://maps.googleapis.com/maps/api/place/"+"photo?maxwidth=400&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0"+"&"+ response.body().result().photos().get(0).url();
+                                response.body().result().photos().get(0).thumb = url;
+                            }
+                           /* restaurantPhoto.enqueue(new Callback() {
                                 @Override
                                 public void onResponse(Call call, Response response) {
-                                    
-                                   // Bitmap pic = BitmapFactory.decodeStream()
+                                    //Log.d("testos",response.body().toString());
+                                    Picasso.Builder builder = new Picasso.Builder(newsImage.getContext());
+                                    builder.downloader(new OkHttp3Downloader(newsImage.getContext()));
+                                    builder.build().load(response.body().)
+                                        .into(newsImage);
                                 }
 
                                 @Override
                                 public void onFailure(Call call, Throwable t) {
 
                                 }
-                            });*/
-                        }
+                            });
+                            }
+*/
+                            @Override
+                            public void onFailure(Call<PlacesResponse> call, Throwable t) {
 
-                        @Override
-                        public void onFailure(Call<PlacesResponse> call, Throwable t) {
+                            }
+                        });
 
-                        }
-                    });
+                        databaseReference.child(restaurantList.results().get(i).placeId()).child("name").setValue(restaurantList.results().get(i).name());
+                    }
+                    restaurants.postValue(restaurantList.results());
+
+
                 });
     }
         /*restaurantCall.enqueue(new retrofit2.Callback<RestaurantList>() {

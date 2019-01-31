@@ -39,4 +39,5 @@ task clean(type: Delete) {
             autoValueVersion = '1.5.1'
             moshiVersion = '1.5.0'
             autoValueMoshiVersion = '0.4.3'
+            picassoVersion = '1.1.0'
         }

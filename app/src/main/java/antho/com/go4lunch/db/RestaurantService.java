@@ -1,6 +1,10 @@
 package antho.com.go4lunch.db;
 
+import android.media.Image;
+
 import antho.com.go4lunch.model.RestaurantList;
+import antho.com.go4lunch.model.places.PlacesPhoto;
+import antho.com.go4lunch.model.places.PlacesPhotos;
 import antho.com.go4lunch.model.places.PlacesResponse;
 import io.reactivex.Single;
 import retrofit2.Call;
@@ -14,6 +18,7 @@ public interface RestaurantService
    @GET("details/json?fields=name,formatted_phone_number,vicinity,website,photos&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0")
    Call<PlacesResponse> getRestaurants(@Query(value = "placeid", encoded = true) String id);
    @GET("photo?maxwidth=400&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0")
-   Call getRestaurantPhoto(@Query(value = "photo_reference", encoded = true) String reference);
+   void getRestaurantPhoto(@Query(value = "photo_reference", encoded = true) String reference);
+
 }
 // location=45.730518,4.983453&
