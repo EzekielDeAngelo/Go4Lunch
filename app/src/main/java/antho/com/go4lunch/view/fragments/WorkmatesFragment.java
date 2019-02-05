@@ -50,10 +50,12 @@ public void onResume(){super.onResume();  }
     {
         viewModel.getWorkmates().observe(getActivity(), workmates ->
         {
+
             WorkmatesAdapter adapter = (WorkmatesAdapter) workmatesRecyclerView.getAdapter();
             Log.d("SELECTED_RESTAURANT", workmates.get(0).restaurantId);
+            Log.d("NUMBER", String.valueOf(workmates.size()));
             adapter.setData(workmates);
-            //adapter.notifyDataSetChanged();
+
 
         });
         /*

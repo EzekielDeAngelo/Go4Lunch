@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -34,18 +35,39 @@ public class WorkmateViewModel extends ViewModel
         loadWorkmates();
     }
     //
-    public LiveData<List<Workmate>> getWorkmates() { return workmates; }
+    public LiveData<List<Workmate>> getWorkmates() {
+        return workmates; }
     //
     List<Workmate> wmList = new ArrayList<>();
     private void loadWorkmates() {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("workmate");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                dataSnapshot.getValue();
+                wmList.clear();
+                Iterable<DataSnapshot> data = dataSnapshot.getChildren();
+                for (DataSnapshot workmate : data)
+                {
+                    Workmate wm = workmate.getValue(Workmate.class);
+                    wmList.add(wm);
+                }
+                workmates.postValue(wmList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        /*
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-
                 // Get Post object and use the values to update the UI
                 dataSnapshot.getValue();
                 Iterable<DataSnapshot> data = dataSnapshot.getChildren();
@@ -55,6 +77,7 @@ public class WorkmateViewModel extends ViewModel
                     wmList.add(wm);
                 }
                 workmates.postValue(wmList);
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -62,7 +85,7 @@ public class WorkmateViewModel extends ViewModel
                 // Getting Post failed, log a message
                // Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
-        });
+        });*/
     }
     //
     public void writeNewUser(FirebaseUser user)
@@ -72,7 +95,6 @@ public class WorkmateViewModel extends ViewModel
     public void selectPlace(FirebaseUser user, String restaurantId)
     {
         databaseReference.child(user.getUid()).child("restaurantId").setValue(restaurantId);
-        getWorkmates();
 
 /*
        for (int i = 0 ; i < workmates.getValue().size() ; i++)

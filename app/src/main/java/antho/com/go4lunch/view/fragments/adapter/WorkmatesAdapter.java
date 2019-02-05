@@ -12,6 +12,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.model.workmate.Workmate;
@@ -52,10 +53,10 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     {
         if (workmatesList.size() > 0  /*workmates != null*/)
         {
-            //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new NewsDiffCallback(data, newsList));
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffCallback(workmates, workmatesList));
             workmates.clear();
             workmates.addAll(workmatesList);
-            //diffResult.dispatchUpdatesTo(this);
+            diffResult.dispatchUpdatesTo(this);
         }
         else
         {

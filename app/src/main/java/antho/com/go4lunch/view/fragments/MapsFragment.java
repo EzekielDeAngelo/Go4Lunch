@@ -199,18 +199,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                     @Override
                     public void onSuccess(Location location)
                     {
-                        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
-                            @Override
-                            public void onInfoWindowClick(Marker marker)
-                            {
-                                Intent intent = new Intent(getContext(), RestaurantDetailsActivity.class);
-                                //intent.putExtra("photo", photo);
-                                intent.putExtra("name", marker.getTitle());
-                                //intent.putExtra("address", address);
-                                //intent.putExtra("section", section);
-                                startActivity(intent);
-                            }});
                         if (location != null)
                         {
                             // Set the map's camera position to the current location of the device.
@@ -249,6 +238,19 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
                                     // Placing a marker on the touched position
                                     Marker m = mMap.addMarker(markerOptions);
+                                    String restaurantId = restaurants.get(i).placeId();
+                                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+                                        @Override
+                                        public void onInfoWindowClick(Marker marker)
+                                        {
+                                            Intent intent = new Intent(getContext(), RestaurantDetailsActivity.class);
+                                            //intent.putExtra("photo", photo);
+                                            intent.putExtra("restaurantId", restaurantId);
+                                            //intent.putExtra("address", address);
+                                            //intent.putExtra("section", section);
+                                            startActivity(intent);
+                                        }});
                                 }
                             }
                         });

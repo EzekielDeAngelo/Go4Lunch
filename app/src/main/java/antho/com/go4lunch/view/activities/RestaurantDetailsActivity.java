@@ -57,10 +57,10 @@ public class RestaurantDetailsActivity extends AppCompatActivity
             builder.build().load(url)
                     .into(photo);
         }
-        select.setOnClickListener(selectRestaurant);
+        //select.setOnClickListener(selectRestaurant);
     }
     //
-    View.OnClickListener selectRestaurant = new View.OnClickListener()
+    /*View.OnClickListener selectRestaurant = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
@@ -80,6 +80,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity
             childUpdates.put(mFirebaseUser.getUid(), postValues);
             databaseReference.updateChildren(childUpdates);*/
             //viewModel.getWorkmates();
-        }
-    };
+      /*  }
+    };*/
 }
