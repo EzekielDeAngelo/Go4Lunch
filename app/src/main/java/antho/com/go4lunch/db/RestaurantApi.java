@@ -1,5 +1,5 @@
 package antho.com.go4lunch.db;
-
+/** **/
 import com.squareup.moshi.Moshi;
 
 import java.util.concurrent.Executors;
@@ -7,19 +7,22 @@ import java.util.concurrent.Executors;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.moshi.MoshiConverterFactory;
-
-public class RestaurantApi {
-
+/** **/
+public class RestaurantApi
+{
     private static final String BASE_URL = "https://maps.googleapis.com/maps/api/place/";
     private static Retrofit retrofit;
     private static RestaurantService restaurantService;
     private static Moshi moshi;
-
-    public static RestaurantService getInstance() {
-        if (restaurantService != null) {
+    //
+    public static RestaurantService getInstance()
+    {
+        if (restaurantService != null)
+        {
             return restaurantService;
         }
-        if (retrofit == null) {
+        if (retrofit == null)
+        {
             initMoshi();
             initRetrofit();
         }
@@ -44,7 +47,3 @@ public class RestaurantApi {
                 .build();
     }
 }
-//        double mLatitude = mLastKnownLocation.getLatitude();
-  //      double mLongitude = mLastKnownLocation.getLongitude();
-//        sb.append("location=" + mLatitude + "," + mLongitude);
-

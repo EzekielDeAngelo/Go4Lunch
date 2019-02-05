@@ -1,5 +1,6 @@
 package antho.com.go4lunch.view.fragments;
 /** **/
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -15,22 +16,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import antho.com.go4lunch.base.BaseFragment;
 import antho.com.go4lunch.R;
-import antho.com.go4lunch.model.Restaurant;
+import antho.com.go4lunch.model.restaurant.Restaurant;
+import antho.com.go4lunch.view.activities.RestaurantDetailsActivity;
 import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import antho.com.go4lunch.viewmodel.ViewModelFactory;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,19 +44,18 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 /** **/
-
-public class MapsFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener
+public class MapsFragment extends BaseFragment implements OnMapReadyCallback
 {
+    GoogleMap mMap;
     SupportMapFragment mapFragment;
     private RestaurantViewModel viewModel;
-    // The entry points to the Places API.
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    GoogleMap mMap;
     // A default location (Sydney, Australia) and default zoom to use when location permission is not granted.
     private final LatLng mDefaultLocation = new LatLng(45.730518, 4.983453);
     // The geographical location where the device is currently located. That is, the last-known location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
+
 
     private boolean mLocationPermissionGranted;
 
@@ -80,7 +77,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     //
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {getDeviceLocation();
+    {
+        getDeviceLocation();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         ButterKnife.bind(this, view);
@@ -96,7 +94,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
             FragmentTransaction ft = fm.beginTransaction();
             mapFragment = SupportMapFragment.newInstance();
             ft.replace(R.id.map, mapFragment).commit();
-
         }
         mapFragment.getMapAsync(this);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
@@ -105,9 +102,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     //
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
-
         super.onViewCreated(view, savedInstanceState);
-
     }
     //
     @Override
@@ -116,8 +111,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         mMap = map;
         updateLocationUI();
         getDeviceLocation();
-        //mMap.setOnInfoWindowClickListener(this);
-        //mMap.setOnPoiClickListener(this);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         try
         {
@@ -132,8 +125,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
-        // Position the map's camera near default location
-        //map.moveCamera(CameraUpdateFactory.newLatLng(mDefaultLocation));
     }
     //
     private void updateLocationUI()
@@ -208,6 +199,18 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                     @Override
                     public void onSuccess(Location location)
                     {
+                        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+                            @Override
+                            public void onInfoWindowClick(Marker marker)
+                            {
+                                Intent intent = new Intent(getContext(), RestaurantDetailsActivity.class);
+                                //intent.putExtra("photo", photo);
+                                intent.putExtra("name", marker.getTitle());
+                                //intent.putExtra("address", address);
+                                //intent.putExtra("section", section);
+                                startActivity(intent);
+                            }});
                         if (location != null)
                         {
                             // Set the map's camera position to the current location of the device.
@@ -223,6 +226,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                             mLastKnownLocation.setLatitude(mDefaultLocation.latitude);
                             mLastKnownLocation.setLongitude(mDefaultLocation.longitude);
                         }
+
+
                         lng = mLastKnownLocation.getLongitude();
                         lat = mLastKnownLocation.getLatitude();
                         String parsedLocation = lat.toString() + "," + lng.toString();
@@ -242,12 +247,11 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                                     markerOptions.position(restaurantLatLng);
                                     markerOptions.title(restaurants.get(i).name());
                                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                                // Placing a marker on the touched position
+                                    // Placing a marker on the touched position
                                     Marker m = mMap.addMarker(markerOptions);
                                 }
                             }
                         });
-
                     }
                 });
             }
@@ -257,11 +261,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
             Log.e("Exception: %s", e.getMessage());
         }
     }
-    @Override
-    public void onInfoWindowClick(Marker marker)
-    {
-        Log.d("prout", marker.getId());
-    }
+
+
     //
     @Override
     public void onSaveInstanceState(Bundle outState)

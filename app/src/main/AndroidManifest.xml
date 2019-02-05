@@ -31,7 +31,9 @@
         <activity
             android:name=".view.activities.SignInActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
+        <activity
+            android:name=".view.activities.RestaurantDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

@@ -21,14 +21,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
+import antho.com.go4lunch.view.activities.RestaurantDetailsActivity;
 import antho.com.go4lunch.view.activities.SignInActivity;
-import antho.com.go4lunch.view.fragments.ListFragment;
+import antho.com.go4lunch.view.fragments.RestaurantsFragment;
 import antho.com.go4lunch.view.fragments.MapsFragment;
+import antho.com.go4lunch.view.fragments.WorkmatesFragment;
+import antho.com.go4lunch.view.fragments.adapter.RestaurantsAdapter;
+import antho.com.go4lunch.viewmodel.WorkmateViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /** **/
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, RestaurantsAdapter.OnRestaurantClickedListener {
     @BindView(R.id.navigation)
     BottomNavigationView bottomNavigationView;
     private TextView mTextMessage;
@@ -43,7 +48,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final String SELECTED_INDEX_KEY = "selected_index";
     private static final String MAP_VIEW_TAG = "MAP_VIEW_TAG";
     private static final String LIST_VIEW_TAG = "LIST_VIEW_TAG";
-    private static final String WORKMATES_TAG = "WORKMATES_TAG";
+    private static final String WORKMATES_VIEW_TAG = "WORKMATES_VIEW_TAG";
+
+    private WorkmateViewModel viewModel;
     //
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,20 +60,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         ButterKnife.bind(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
-
-// Write a message to the database
-
+        // Write a message to the database
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
-
         // Initialize Firebase Auth
+        viewModel = ViewModelProviders.of(this).get(WorkmateViewModel.class);
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
             startActivity(new Intent(this, SignInActivity.class));
+            viewModel.writeNewUser(mFirebaseUser);
+
             finish();
             return;
         } else {
@@ -74,7 +81,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
+            viewModel.writeNewUser(mFirebaseUser);
         }
+
         fragmentManager = getSupportFragmentManager();
         int selectedIndex = savedInstanceState == null ? 0 : savedInstanceState.getInt(SELECTED_INDEX_KEY);
         loadFirstFragment(selectedIndex);
@@ -100,16 +109,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 fragment = fragmentManager.findFragmentByTag(LIST_VIEW_TAG);
                 if (fragment == null)
                 {
-                    fragment = ListFragment.newInstance();
+                    fragment = RestaurantsFragment.newInstance();
                 }
                 break;
             case 2:
-                /*tag = BUSINESS_NEWS_TAG;
-                fragment = fragmentManager.findFragmentByTag(BUSINESS_NEWS_TAG);
+                tag = WORKMATES_VIEW_TAG;
+                fragment = fragmentManager.findFragmentByTag(WORKMATES_VIEW_TAG);
                 if (fragment == null)
                 {
-                    fragment = BusinessFragment.newInstance();
-                }*/
+                    fragment = WorkmatesFragment.newInstance();
+                }
                 break;
         }
         if (fragment != null)
@@ -132,10 +141,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 case R.id.navigation_list:
 
                     Fragment fragmentList = fragmentManager.findFragmentByTag(LIST_VIEW_TAG);
-                    if (fragmentList == null) fragmentList = ListFragment.newInstance();
+                    if (fragmentList == null) fragmentList = RestaurantsFragment.newInstance();
                     changeFragment(fragmentList, LIST_VIEW_TAG);
                     return true;
+                case R.id.navigation_workmates:
 
+                    Fragment fragmentWorkmates = fragmentManager.findFragmentByTag(WORKMATES_VIEW_TAG);
+                    if (fragmentWorkmates == null) fragmentWorkmates = WorkmatesFragment.newInstance();
+                    changeFragment(fragmentWorkmates, WORKMATES_VIEW_TAG);
+                    return true;
 
             }
             return false;
@@ -195,22 +209,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     {
 
     }
-/*
+    //
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
-        }
-    }*/
+    public void onItemClicked(String name, String address, String photo)
+    {
+        Intent intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
+        intent.putExtra("photo", photo);
+        intent.putExtra("name", name);
+        intent.putExtra("address", address);
+        startActivity(intent);
+    }
 }
-
-
-
-        /*if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED))
-                /*{whatever}*/
 
 

@@ -1,6 +1,5 @@
 package antho.com.go4lunch.view.fragments.adapter;
-
-import android.util.Log;
+/** **/
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,44 +9,36 @@ import android.widget.TextView;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
-import antho.com.go4lunch.model.Restaurant;
-import antho.com.go4lunch.viewmodel.RestaurantViewModel;
+import antho.com.go4lunch.model.restaurant.places.Place;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
+/** **/
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.RestaurantViewHolder>
 {
-    //private final OnRestaurantClickListener listener;
-    private final List<Restaurant> restaurants;// = new ArrayList<>();
+    private final OnRestaurantClickedListener listener;
+    private final List<Place> restaurants;// = new ArrayList<>();
     // Constructor
-    public RestaurantsAdapter (/*RestaurantViewModel viewModel, LifecycleOwner owner*/List<Restaurant> restaurants/*OnRestaurantClickListener listener*/) {
-        //this.listener = listener;
-        //viewModel.getRestaurants().observe(owner, this::setData);
+    public RestaurantsAdapter (List<Place> restaurants, OnRestaurantClickedListener listener)
+    {
+        this.listener = listener;
         this.restaurants = restaurants;
-
     }
     @NonNull
     @Override
     public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_layout, parent, false);
-        return new RestaurantViewHolder(itemView/*, listener*/);
+        return new RestaurantViewHolder(itemView, listener);
     }
     // Bind data to the view items
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position)
     {
-
         holder.bind(restaurants.get(position));
     }
     @Override
@@ -56,49 +47,50 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         return restaurants.size();
     }
     // Add news list data if available
-    /*public interface OnRestaurantClickListener
+    public void setData(List<Place> places)
     {
-        void onItemClicked();
-    }*/
-    public void setData(List<Restaurant> restaurants)
-    {
-
-        if (restaurants != null)
+        if (places != null)
         {
             //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new NewsDiffCallback(data, newsList));
-            restaurants.clear();
-            restaurants.addAll(restaurants);
+            places.clear();
+            places.addAll(places);
             //diffResult.dispatchUpdatesTo(this);
         }
         else
         {
-            restaurants.clear();
+            places.clear();
             notifyDataSetChanged();
         }
         notifyDataSetChanged();
     }
+    //
     static final class RestaurantViewHolder extends RecyclerView.ViewHolder
     {
-        @BindView(R.id.section)
-        TextView name;
-        @BindView(R.id.thumbnail)
-        ImageView thumbnail;
-        private Restaurant restaurant;
-        RestaurantViewHolder(View itemView/*, OnRestaurantClickListener listener*/)
+        @BindView(R.id.name) TextView name;
+        @BindView(R.id.adress) TextView address;
+        @BindView(R.id.thumbnail) ImageView thumbnail;
+        private Place place;
+        RestaurantViewHolder(View itemView, OnRestaurantClickedListener listener)
         {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            //itemView.setOnClickListener(v -> listener.onItemClicked());
+            itemView.setOnClickListener(v -> listener.onItemClicked(place.name(), place.adress(), place.thumb));
         }
-        void bind(Restaurant restaurant)
+        void bind(Place place)
         {
-            this.restaurant = restaurant;
-            name.setText(restaurant.name());
+            this.place = place;
+            name.setText(place.name());
+            address.setText(place.adress());
             Picasso.Builder builder = new Picasso.Builder(thumbnail.getContext());
             builder.downloader(new OkHttp3Downloader(thumbnail.getContext()));
-            builder.build().load(restaurant.)
+            builder.build().load(place.thumb)
                     .into(thumbnail);
         }
+    }
+    // On click listener with
+    public interface OnRestaurantClickedListener
+    {
+        void onItemClicked(String name, String address, String photo);
     }
 }
 
