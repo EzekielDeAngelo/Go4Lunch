@@ -1,6 +1,5 @@
 package antho.com.go4lunch.view.fragments.adapter;
 /** **/
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +68,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     {
         @BindView(R.id.name)
         TextView name;
-        @BindView(R.id.adress)
+        @BindView(R.id.address)
         TextView address;
         @BindView(R.id.thumbnail)
         ImageView thumbnail;
@@ -83,7 +82,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
         {
             this.workmate = workmate;
             name.setText(workmate.name + " is going to eat at " + workmate.restaurantId);
-            /*address.setText(workmate.adress());
+            /*address.setText(workmate.address());
             Picasso.Builder builder = new Picasso.Builder(thumbnail.getContext());
             builder.downloader(new OkHttp3Downloader(thumbnail.getContext()));
             builder.build().load(restaurant.thumb)

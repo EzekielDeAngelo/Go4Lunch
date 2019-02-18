@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import antho.com.go4lunch.view.activities.RestaurantDetailsActivity;
+import antho.com.go4lunch.view.activities.SearchActivity;
 import antho.com.go4lunch.view.activities.SignInActivity;
 import antho.com.go4lunch.view.fragments.RestaurantsFragment;
 import antho.com.go4lunch.view.fragments.MapsFragment;
@@ -191,6 +192,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     {
         switch (item.getItemId())
         {
+            case R.id.search_item:
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.sign_out_menu:
                 mFirebaseAuth.signOut();
                 LoginManager.getInstance().logOut();
@@ -211,12 +216,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
     //
     @Override
-    public void onItemClicked(String name, String address, String photo)
+    public void onItemClicked(String id, String name, String address, String photo, String phone, String website, boolean like)
     {
         Intent intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
+        intent.putExtra("id", id);
         intent.putExtra("photo", photo);
         intent.putExtra("name", name);
         intent.putExtra("address", address);
+        intent.putExtra("phone", phone);
+        intent.putExtra("website", website);
+        intent.putExtra("like", like);
         startActivity(intent);
     }
 }

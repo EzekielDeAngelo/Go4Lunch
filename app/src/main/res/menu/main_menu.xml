@@ -5,4 +5,11 @@
         android:id="@+id/sign_out_menu"
         android:title="@string/sign_out"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/search_item"
+        android:title="@string/search"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_search_black_24dp"
+        app:showAsAction="ifRoom"
+        />
 </menu>

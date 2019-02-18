@@ -96,14 +96,13 @@ public class WorkmateViewModel extends ViewModel
     {
         databaseReference.child(user.getUid()).child("restaurantId").setValue(restaurantId);
 
-/*
-       for (int i = 0 ; i < workmates.getValue().size() ; i++)
-       {
-           if (wmList.get(i).id == user.getUid())
-           {
-               wmList.get(i).restaurantId = restaurantId;
-           }
-       }
-       workmates.postValue(wmList);*/
     }
+    /*public void likeRestaurant(FirebaseUser user, String restaurantId)
+    {
+        databaseReference.child(user.getUid()).child("likedRestaurantsId").child(restaurantId).
+    }
+    public void dislikeRestaurant(FirebaseUser user, String restaurantId)
+    {
+        databaseReference.child(user.getUid()).child("likedRestaurantsId").child("id").removeValue();
+    }*/
 }

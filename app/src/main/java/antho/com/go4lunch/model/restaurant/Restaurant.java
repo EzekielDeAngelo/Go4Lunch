@@ -11,7 +11,7 @@ public abstract class Restaurant
     @Json(name="name")
     public abstract String name();
     @Json(name="place_id")
-    public abstract String placeId();
+    public abstract String id();
     @Json(name="geometry")
     public abstract RestaurantGeometry geometry();
 

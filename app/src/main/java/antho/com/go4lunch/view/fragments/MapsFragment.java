@@ -1,11 +1,16 @@
 package antho.com.go4lunch.view.fragments;
 /** **/
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -16,7 +21,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import antho.com.go4lunch.base.BaseFragment;
 import antho.com.go4lunch.R;
-import antho.com.go4lunch.model.restaurant.Restaurant;
+import antho.com.go4lunch.model.restaurant.places.Place;
 import antho.com.go4lunch.view.activities.RestaurantDetailsActivity;
 import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import antho.com.go4lunch.viewmodel.ViewModelFactory;
@@ -33,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -41,6 +47,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 /** **/
@@ -56,7 +64,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
     // The geographical location where the device is currently located. That is, the last-known location retrieved by the Fused Location Provider.
     private Location mLastKnownLocation;
 
-
+    private Place selectedPlace;
     private boolean mLocationPermissionGranted;
 
     private static final int DEFAULT_ZOOM = 15;
@@ -67,6 +75,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
     private static final String KEY_LOCATION = "location";
     private static final String TAG = "LOCATION";
     private CameraPosition mCameraPosition;
+    Location defaultLoc = new Location("");
     // Required empty public constructor
     public MapsFragment() {}
     //
@@ -84,8 +93,16 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
         ButterKnife.bind(this, view);
         if (savedInstanceState != null)
         {
+
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
+        else
+        {
+
+            defaultLoc.setLatitude(mDefaultLocation.latitude);
+            defaultLoc.setLongitude(mDefaultLocation.longitude);
+            mLastKnownLocation = defaultLoc;
         }
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment == null)
@@ -145,7 +162,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
             {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mLastKnownLocation = null;
+                defaultLoc.setLatitude(mDefaultLocation.latitude);
+                defaultLoc.setLongitude(mDefaultLocation.longitude);
+                mLastKnownLocation = defaultLoc;
                 mMap.setMyLocationEnabled(true);
             }
         }
@@ -212,6 +231,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                             //Log.e(TAG, "Exception: %s", task.getException());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
                             mLastKnownLocation.setLatitude(mDefaultLocation.latitude);
                             mLastKnownLocation.setLongitude(mDefaultLocation.longitude);
                         }
@@ -222,35 +242,52 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                         String parsedLocation = lat.toString() + "," + lng.toString();
                         viewModel = ViewModelProviders.of(getActivity(), new ViewModelFactory(parsedLocation)).get("RestaurantViewModel", RestaurantViewModel.class);
 
-                        viewModel.getRestaurants().observe(getActivity(), new Observer<List<Restaurant>>()
-                        {
+                        viewModel.getPlaces().observe(getActivity(), new Observer<List<Place>>() {
                             @Override
-                            public void onChanged(@Nullable List<Restaurant> restaurants)
-                            {
-                                for (int i = 0 ; i < restaurants.size() ; i++)
+                            public void onChanged(List<Place> places) {
+                                for (int i = 0 ; i < places.size() ; i++)
                                 {
-                                    Double restaurantLat = Double.parseDouble(restaurants.get(i).geometry().location().latitude());
-                                    Double restaurantLng = Double.parseDouble(restaurants.get(i).geometry().location().longitude());
+                                    Double restaurantLat = Double.parseDouble(places.get(i).lat);
+                                    Double restaurantLng = Double.parseDouble(places.get(i).lng);
                                     LatLng restaurantLatLng = new LatLng(restaurantLat, restaurantLng);
                                     MarkerOptions markerOptions = new MarkerOptions();
                                     markerOptions.position(restaurantLatLng);
-                                    markerOptions.title(restaurants.get(i).name());
-                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                                    markerOptions.title(places.get(i).name());
+
+                                    markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_restaurant_black_24dp));
                                     // Placing a marker on the touched position
                                     Marker m = mMap.addMarker(markerOptions);
-                                    String restaurantId = restaurants.get(i).placeId();
-                                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                                    m.setTag(places.get(i).placeId);
+                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                        @Override
+                                        public boolean onMarkerClick(Marker marker) {
+                                            viewModel.getPlace((String) marker.getTag()).observe(getActivity(), place ->
+                                            {
+                                                 selectedPlace = place;
+                                            });
+                                            return false;
+                                        }
+                                    });
 
+                                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener()
+                                    {
                                         @Override
                                         public void onInfoWindowClick(Marker marker)
                                         {
-                                            Intent intent = new Intent(getContext(), RestaurantDetailsActivity.class);
-                                            //intent.putExtra("photo", photo);
-                                            intent.putExtra("restaurantId", restaurantId);
-                                            //intent.putExtra("address", address);
-                                            //intent.putExtra("section", section);
-                                            startActivity(intent);
-                                        }});
+
+                                                Intent intent = new Intent(getContext(), RestaurantDetailsActivity.class);
+                                                intent.putExtra("id", (String) marker.getTag());
+                                                intent.putExtra("photo", selectedPlace.thumb);
+                                                intent.putExtra("name", selectedPlace.name());
+                                                intent.putExtra("address", selectedPlace.address());
+                                                intent.putExtra("phone", selectedPlace.phone());
+                                                intent.putExtra("website", selectedPlace.website());
+                                                intent.putExtra("like", selectedPlace.like);
+                                                startActivity(intent);
+                                                marker.hideInfoWindow();
+                                        }
+                                    });
+
                                 }
                             }
                         });
@@ -263,7 +300,19 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
             Log.e("Exception: %s", e.getMessage());
         }
     }
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
+        Drawable background = ContextCompat.getDrawable(context, R.drawable.ic_place_black_24dp);
+        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        vectorDrawable.setBounds(0 +20, 0 +20, vectorDrawable.getIntrinsicWidth() -20, vectorDrawable.getIntrinsicHeight()-20);
 
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        background.draw(canvas);
+        vectorDrawable.draw(canvas);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth()*2, bitmap.getHeight()*2, false);
+        return BitmapDescriptorFactory.fromBitmap(scaledBitmap);
+    }
 
     //
     @Override

@@ -5,6 +5,7 @@ import com.google.auto.value.AutoValue;
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.Nullable;
@@ -15,11 +16,13 @@ public /*abstract*/ class Workmate
     public /*abstract*/ String name;
     public /*abstract*/ String id;
     public String restaurantId;
+    public List<String> likedRestaurants;
     public Workmate(){}
-    public Workmate(String id, String username, @Nullable String restaurantId) {
+    public Workmate(String id, String username, @Nullable String restaurantId, @Nullable List<String> likedRestaurants) {
         this.name = username;
         this.id = id;
         this.restaurantId = restaurantId;
+        this.likedRestaurants = likedRestaurants;
     }
     public String getId() {
         return id;
@@ -46,15 +49,6 @@ public /*abstract*/ class Workmate
     public void setName(String name) {
         this.name = name;
     }
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        //result.put("id", id);
-        result.put("name", name);
-        result.put("restaurantid", restaurantId);
 
-
-        return result;
-    }
 
 }

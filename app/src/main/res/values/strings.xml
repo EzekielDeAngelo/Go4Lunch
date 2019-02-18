@@ -11,7 +11,7 @@
     <string name="facebook_sign_in">SIGN IN WITH FACEBOOK</string>
     <string name="google_sign_in">SIGN IN WITH GOOGLE</string>
 
-
+    <string name="search">Search</string>
     <string name="welcome_msg">Welcome!</string>
     <string name="sign_out">Sign Out</string>
     <string name="contacts_permission_rationale">Access to account information is required to sign in.</string>

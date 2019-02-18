@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.model.restaurant.places.Place;
@@ -40,6 +41,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position)
     {
+        Log.d("rototo", String.valueOf(position));
         holder.bind(restaurants.get(position));
     }
     @Override
@@ -50,38 +52,41 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     // Add news list data if available
     public void setData(List<Place> places)
     {
+
         if (places != null)
         {
-            //DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new NewsDiffCallback(data, newsList));
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new RestaurantDiffCallback(restaurants, places));
             places.clear();
             places.addAll(places);
-            //diffResult.dispatchUpdatesTo(this);
+            diffResult.dispatchUpdatesTo(this);
         }
         else
         {
             places.clear();
             notifyDataSetChanged();
         }
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
     //
     static final class RestaurantViewHolder extends RecyclerView.ViewHolder
     {
         @BindView(R.id.name) TextView name;
-        @BindView(R.id.adress) TextView address;
+        @BindView(R.id.address) TextView address;
         @BindView(R.id.thumbnail) ImageView thumbnail;
+        @BindView(R.id.stars) TextView stars;
         private Place place;
         RestaurantViewHolder(View itemView, OnRestaurantClickedListener listener)
         {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(v -> listener.onItemClicked(place.name(), place.adress(), place.thumb));
+            itemView.setOnClickListener(v -> listener.onItemClicked(place.placeId, place.name(), place.address(), place.thumb, place.phone(), place.website(), place.like));
         }
         void bind(Place place)
         {
             this.place = place;
             name.setText(place.name());
-            address.setText(place.adress());
+            address.setText(place.address());
+            Log.d("hohohohuhuohihohio", String.valueOf(place.like));
             Picasso.Builder builder = new Picasso.Builder(thumbnail.getContext());
             builder.downloader(new OkHttp3Downloader(thumbnail.getContext()));
             builder.build().load(place.thumb)
@@ -91,7 +96,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     // On click listener with
     public interface OnRestaurantClickedListener
     {
-        void onItemClicked(String name, String address, String photo);
+        void onItemClicked(String id, String name, String address, String photo, String phone, String website, boolean like);
     }
 }
 

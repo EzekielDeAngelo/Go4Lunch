@@ -17,6 +17,7 @@ import antho.com.go4lunch.view.fragments.adapter.RestaurantsAdapter;
 import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import butterknife.BindView;
 
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -46,6 +47,8 @@ public class RestaurantsFragment extends BaseFragment
             public void onChanged(@Nullable List<Place> places)
             {
                 restaurantRecyclerView.setAdapter(new RestaurantsAdapter(places, ((RestaurantsAdapter.OnRestaurantClickedListener) getActivity())));
+                //RestaurantsAdapter adapter = (RestaurantsAdapter) restaurantRecyclerView.getAdapter();
+                //adapter.setData(places);
             }
         });
     }

@@ -29,11 +29,29 @@
 
             />
         <Button
-            android:id="@+id/select"
+        android:id="@+id/select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go4Lunch!"
+        android:layout_below="@+id/address"/>
+        <Button
+            android:id="@+id/call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Go4Lunch!"
-            android:layout_below="@+id/address"/>
+            android:text="Call!"
+            android:layout_below="@+id/select"/>
+        <Button
+            android:id="@+id/website"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Website!"
+            android:layout_below="@+id/call"/>
+        <ToggleButton
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Like!"
+            android:layout_below="@+id/website"/>
     </RelativeLayout>
 
 </LinearLayout>
