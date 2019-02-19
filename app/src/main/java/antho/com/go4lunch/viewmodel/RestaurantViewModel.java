@@ -131,6 +131,7 @@ public class RestaurantViewModel extends ViewModel
     //
     private void loadRestaurants(String location)
     {
+
         Single<RestaurantResponse> restaurantsCall;
         restaurantsCall = RestaurantApi.getInstance().getRestaurantsId(location);
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
@@ -155,6 +156,7 @@ public class RestaurantViewModel extends ViewModel
 
                         if ((boolean) dataSnapshot.getValue() == true)
                         {
+                            Log.d("likedby", dataSnapshot.getKey());
                             likedBy.add(dataSnapshot.getKey());
                         }
                     }
@@ -215,6 +217,7 @@ public class RestaurantViewModel extends ViewModel
     //
     public void likePlace(FirebaseUser user, String restaurantId)
     {
+
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
         databaseReference.child(restaurantId).child("likedBy").child(user.getUid()).setValue(true);
     }

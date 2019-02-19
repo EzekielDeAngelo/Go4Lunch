@@ -82,7 +82,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity
             startActivity(intent);
         });
         restaurantViewModel = ViewModelProviders.of(this, new ViewModelFactory(null)).get("RestaurantViewModel", RestaurantViewModel.class);
-        Log.d("hohohohihihuhu", String.valueOf(getIntent().getBooleanExtra("like", false)));
         like.setChecked(getIntent().getBooleanExtra("like", false));
         like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -93,7 +92,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity
                     restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
                     {
                         place.likedBy.add(mFirebaseUser.getUid());
-                        //Log.d("rototo", String.valueOf(place.likedBy.size()));
+                        Log.d("onCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.like)));
                     });
                 }
                 else

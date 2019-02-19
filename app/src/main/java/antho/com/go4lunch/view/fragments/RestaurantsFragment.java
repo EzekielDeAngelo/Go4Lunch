@@ -20,6 +20,8 @@ import butterknife.BindView;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.maps.model.Marker;
+
 import java.util.List;
 /** **/
 public class RestaurantsFragment extends BaseFragment
@@ -34,22 +36,32 @@ public class RestaurantsFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+
         viewModel = ViewModelProviders.of(getActivity()).get("RestaurantViewModel", RestaurantViewModel.class);
-        restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         observeViewModel();
     }
+    public void onResume()
+    {
+        super.onResume();
+        observeViewModel();
+    }
+
     //
     private void observeViewModel()
     {
-        viewModel.getPlaces().observe(this, new Observer<List<Place>>()
+
+        viewModel.getPlaces().observe(this, places ->
         {
-            @Override
-            public void onChanged(@Nullable List<Place> places)
+            Log.d("rotototo", String.valueOf(places.size()));
+
+            restaurantRecyclerView.setAdapter(new RestaurantsAdapter(((RestaurantsAdapter.OnRestaurantClickedListener) getActivity())));
+                RestaurantsAdapter adapter = (RestaurantsAdapter) restaurantRecyclerView.getAdapter();
+                adapter.setData(places);
+         /*   viewModel.getPlace((String) marker.getTag()).observe(getActivity(), place ->
             {
-                restaurantRecyclerView.setAdapter(new RestaurantsAdapter(places, ((RestaurantsAdapter.OnRestaurantClickedListener) getActivity())));
-                //RestaurantsAdapter adapter = (RestaurantsAdapter) restaurantRecyclerView.getAdapter();
-                //adapter.setData(places);
-            }
+                selectedPlace = place;
+            });*/
         });
     }
     // Return fragment layout

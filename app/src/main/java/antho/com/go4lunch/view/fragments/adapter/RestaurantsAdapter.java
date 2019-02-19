@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -23,12 +24,12 @@ import butterknife.ButterKnife;
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.RestaurantViewHolder>
 {
     private final OnRestaurantClickedListener listener;
-    private final List<Place> restaurants;// = new ArrayList<>();
+    private final List<Place> restaurants = new ArrayList<>();
     // Constructor
-    public RestaurantsAdapter (List<Place> restaurants, OnRestaurantClickedListener listener)
+    public RestaurantsAdapter (OnRestaurantClickedListener listener)
     {
         this.listener = listener;
-        this.restaurants = restaurants;
+        //this.restaurants = restaurants;
     }
     @NonNull
     @Override
@@ -41,8 +42,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     @Override
     public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position)
     {
-        Log.d("rototo", String.valueOf(position));
-        holder.bind(restaurants.get(position));
+        Log.d("onbindviewholder places", String.valueOf(position));
+                holder.bind(restaurants.get(position));
     }
     @Override
     public int getItemCount()
@@ -55,14 +56,19 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
 
         if (places != null)
         {
+            for (int i = 0 ; i < places.size(); i++)
+            {
+                Log.d("setdata places", places.get(i).name() + " : " + String.valueOf(places.get(i).like));
+            }
             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new RestaurantDiffCallback(restaurants, places));
-            places.clear();
-            places.addAll(places);
+            restaurants.clear();
+            restaurants.addAll(places);
             diffResult.dispatchUpdatesTo(this);
+            notifyDataSetChanged();
         }
         else
         {
-            places.clear();
+            restaurants.clear();
             notifyDataSetChanged();
         }
         //notifyDataSetChanged();
@@ -93,6 +99,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                     .into(thumbnail);
         }
     }
+
     // On click listener with
     public interface OnRestaurantClickedListener
     {
