@@ -47,8 +47,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 /** **/
@@ -254,7 +252,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                                     markerOptions.position(restaurantLatLng);
                                     markerOptions.title(places.get(i).name());
 
-                                    markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_restaurant_black_24dp));
+                                    markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_content));
                                     // Placing a marker on the touched position
                                     Marker m = mMap.addMarker(markerOptions);
                                     m.setTag(places.get(i).placeId);
@@ -283,6 +281,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                                                 intent.putExtra("phone", selectedPlace.phone());
                                                 intent.putExtra("website", selectedPlace.website());
                                                 intent.putExtra("like", selectedPlace.like);
+                                                intent.putExtra("selected", selectedPlace.selected);
                                                 startActivity(intent);
                                                 marker.hideInfoWindow();
                                         }
@@ -301,10 +300,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
         }
     }
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
-        Drawable background = ContextCompat.getDrawable(context, R.drawable.ic_place_black_24dp);
+        Drawable background = ContextCompat.getDrawable(context, R.drawable.ic_marker_frame);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable.setBounds(0 +20, 0 +20, vectorDrawable.getIntrinsicWidth() -20, vectorDrawable.getIntrinsicHeight()-20);
+        vectorDrawable.setBounds(0 +20, 0 +15, vectorDrawable.getIntrinsicWidth() -20, vectorDrawable.getIntrinsicHeight()-25);
 
         Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);

@@ -10,7 +10,8 @@ public abstract class PlacePhotos
 {
     @Json(name="photo_reference")
     public abstract String url();
-
+    public abstract int height();
+    public abstract int width();
     public static JsonAdapter<PlacePhotos> jsonAdapter(Moshi moshi) {
         return new AutoValue_PlacePhotos.MoshiJsonAdapter(moshi);
     }

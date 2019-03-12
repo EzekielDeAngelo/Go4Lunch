@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:background="@color/primary">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,4 +40,21 @@
         android:textColor="@color/facebook_font"
         android:textStyle="bold"
         android:padding="20dp"/>
+    <!--<Button
+        android:id="@+id/twitter_login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:onClick="onClick"
+        android:background="@color/facebook_color"
+        android:text="@string/twitter_sign_in"
+        android:textColor="@color/facebook_font"
+        android:textStyle="bold"
+        android:padding="20dp"/>-->
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
+        android:text="@string/twitter_sign_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"/>
 </LinearLayout>

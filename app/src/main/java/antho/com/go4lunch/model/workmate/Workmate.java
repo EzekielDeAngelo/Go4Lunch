@@ -17,6 +17,7 @@ public /*abstract*/ class Workmate
     public /*abstract*/ String id;
     public String restaurantId;
     public List<String> likedRestaurants;
+
     public Workmate(){}
     public Workmate(String id, String username, @Nullable String restaurantId, @Nullable List<String> likedRestaurants) {
         this.name = username;
@@ -50,5 +51,13 @@ public /*abstract*/ class Workmate
         this.name = name;
     }
 
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("id", id);
+        result.put("name", name);
+        result.put("restaurantId", restaurantId);
 
+        return result;
+    }
 }

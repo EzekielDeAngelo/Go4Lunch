@@ -1,6 +1,5 @@
 package antho.com.go4lunch.viewmodel;
 /** **/
-
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -42,6 +41,7 @@ public class RestaurantViewModel extends ViewModel
     private MutableLiveData<List<LatLng>> markerLocation;
     private MutableLiveData<Place> place;
     private List<String> likedBy = new ArrayList<>();
+    private List<String> selectedBy = new ArrayList<>();
     protected DatabaseReference databaseReference;
     private Disposable disposable;
     // Constructor
@@ -63,75 +63,49 @@ public class RestaurantViewModel extends ViewModel
     public LiveData<Place> getPlace(String id) {  loadPlace(id); return place;}
     public void loadPlace(String id)
     {
-        //Place place = restaurants.getValue().
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        ChildEventListener childEventListener2 = new ChildEventListener() {
-        @Override
-        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
+        databaseReference.child(id).child("likedBy").addChildEventListener(childEventListenerLikeSwitch);
+        databaseReference.child(id).child("selectedBy").addChildEventListener(childEventListenerSelectSwitch);
+        Call<PlaceResponse> restaurantCall = RestaurantApi.getInstance().getRestaurants(id);
+        restaurantCall.enqueue(new Callback<PlaceResponse>()
         {
-            likedBy = new ArrayList<>();
-            if ((boolean) dataSnapshot.getValue() == true)
-            {
-                likedBy.add(dataSnapshot.getKey());
-                Log.d("added", String.valueOf(likedBy.size()));
-            }
-        }
-
-        @Override
-        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-        }
-
-        @Override
-        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-        }
-
-        @Override
-        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-        }
-    };
-        databaseReference.child(id).child("likedBy").addChildEventListener(childEventListener2);
-        //likedBy.add(databaseReference.child(id).child("likedBy").child(mFirebaseUser.getUid()).getKey());
-         Call<PlaceResponse> restaurantCall = RestaurantApi.getInstance().getRestaurants(id);
-         restaurantCall.enqueue(new Callback<PlaceResponse>() {
              @Override
-             public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
+             public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response)
+             {
+                 String photoUrl;
+                 for (int i = 0; i < response.body().result().photos().size(); i++)
+                     if (response.body().result().photos().get(i).height() > 3000 & response.body().result().photos().get(i).width() > 4000)
+                     {
+                         photoUrl = response.body().result().photos().get(i).url();
+                         String url ="https://maps.googleapis.com/maps/api/place/"+"photo?maxwidth=800&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0"+"&photo_reference="+ photoUrl;//response.body().result().photos().get(0).url();
+                         response.body().result().thumb = url;
+                         break;
+                     }
 
-                 String url ="https://maps.googleapis.com/maps/api/place/"+"photo?maxwidth=800&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0"+"&photo_reference="+ response.body().result().photos().get(0).url();
                  response.body().result().likedBy = likedBy;
+                 response.body().result().selectedBy = selectedBy;
+                 if (selectedBy.contains(mFirebaseUser.getUid()))
+                     response.body().result().selected = true;
+                 else
+                     response.body().result().selected = false;
                  if (likedBy.contains(mFirebaseUser.getUid()))
                      response.body().result().like = true;
                  else
                      response.body().result().like = false;
-                 response.body().result().thumb = url;
+
                  response.body().result().placeId = id;
-
-                 Log.d("hihihi",databaseReference.child(id).child("likedBy").child(mFirebaseUser.getUid()).getKey());
-                 databaseReference.child(id).child("likedBy").addChildEventListener(childEventListener);
-                 //response.body().result().likedBy =
-                 //response.body().result().likedBy.add("z");
                  place.postValue(response.body().result());
-
              }
-
              @Override
-             public void onFailure(Call<PlaceResponse> call, Throwable t) {
-
+             public void onFailure(Call<PlaceResponse> call, Throwable t)
+             {
              }
          });
     }
     //
     private void loadRestaurants(String location)
     {
-
         Single<RestaurantResponse> restaurantsCall;
         restaurantsCall = RestaurantApi.getInstance().getRestaurantsId(location);
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
@@ -144,57 +118,40 @@ public class RestaurantViewModel extends ViewModel
                     if (databaseReference.child(restaurantList.results().get(i).id()).getKey() == null)
                     {
                         databaseReference.child(restaurantList.results().get(i).id()).setValue(restaurantList.results().get(i).id());
-
                     }
                     Call<PlaceResponse> restaurantCall = RestaurantApi.getInstance().getRestaurants(restaurantList.results().get(i).id());
                     String id = restaurantList.results().get(i).id();
                     String lat = restaurantList.results().get(i).geometry().location().latitude();
                     String lng = restaurantList.results().get(i).geometry().location().longitude();
-                    List<String> likedBy = new ArrayList<>();ChildEventListener childEventListener2 = new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    List<String> likedBy = new ArrayList<>();
 
-                        if ((boolean) dataSnapshot.getValue() == true)
-                        {
-                            Log.d("likedby", dataSnapshot.getKey());
-                            likedBy.add(dataSnapshot.getKey());
-                        }
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                };
-                    databaseReference.child(id).child("likedBy").addChildEventListener(childEventListener2);
+                    databaseReference.child(id).child("likedBy").addChildEventListener(childEventListenerLikeSwitch);
+                    databaseReference.child(id).child("selectedBy").addChildEventListener(childEventListenerSelectSwitch);
                     restaurantCall.enqueue(new retrofit2.Callback<PlaceResponse>()
                     {
                         @Override
                         public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response)
                         {
-
-                            String url ="https://maps.googleapis.com/maps/api/place/"+"photo?maxwidth=800&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0"+"&photo_reference="+ response.body().result().photos().get(0).url();
-                            response.body().result().thumb = url;
+                            String photoUrl;
+                            for (int i = 0; i < response.body().result().photos().size(); i++)
+                                if (response.body().result().photos().get(i).height() > 3000 & response.body().result().photos().get(i).width() > 4000)
+                                {
+                                    photoUrl = response.body().result().photos().get(i).url();
+                                    String url ="https://maps.googleapis.com/maps/api/place/"+"photo?maxwidth=800&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0"+"&photo_reference="+ photoUrl;//response.body().result().photos().get(0).url();
+                                    response.body().result().thumb = url;
+                                    break;
+                                }
+                            //String url ="https://maps.googleapis.com/maps/api/place/"+"photo?maxheight=500&maxwidth=400&key=AIzaSyCqjpzrT9vnrz1BPfgloK1CsGTR9q7-sX0"+"&photo_reference="+ response.body().result().photos().get(0).url();
+                            //response.body().result().thumb = url;
                             response.body().result().likedBy = likedBy;
                             if (likedBy.contains(mFirebaseUser.getUid()))
                                 response.body().result().like = true;
                             else
                                 response.body().result().like = false;
+                            if (selectedBy.contains(mFirebaseUser.getUid()))
+                                response.body().result().selected = true;
+                            else
+                                response.body().result().selected = false;
                             response.body().result().placeId = id;
                             response.body().result().lat = lat;
                             response.body().result().lng = lng;
@@ -203,33 +160,80 @@ public class RestaurantViewModel extends ViewModel
                             places.postValue(placesList);
                         }
                         @Override
-                        public void onFailure(Call<PlaceResponse> call, Throwable t) { }
+                        public void onFailure(Call<PlaceResponse> call, Throwable t) {}
                     });
                     databaseReference.child(restaurantList.results().get(i).id()).child("name").setValue(restaurantList.results().get(i).name());
-
                 }
-
-
                 restaurants.postValue(restaurantList.results());
             });
-
     }
     //
     public void likePlace(FirebaseUser user, String restaurantId)
     {
-
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
         databaseReference.child(restaurantId).child("likedBy").child(user.getUid()).setValue(true);
     }
     public void dislikePlace(FirebaseUser user, String restaurantId)
     {
-
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
         databaseReference.child(restaurantId).child("likedBy").child(user.getUid()).setValue(false);
-        //databaseReference.child(restaurantId).child("likedBy").addChildEventListener(childEventListener);
-        ;
     }
+    public void selectPlace(FirebaseUser user, String restaurantId)
+    {
+        id = restaurantId;
+        databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
+        databaseReference.child(restaurantId).child("selectedBy").child(user.getUid()).setValue(true);
+    }
+    public void deselectPlace(FirebaseUser user, String restaurantId)
+    {
+        id = restaurantId;
+        databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
+        databaseReference.child(restaurantId).child("selectedBy").child(user.getUid()).setValue(false);
+    }
+String id;
+    FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
+    ChildEventListener childEventListenerLikeSwitch = new ChildEventListener()
+    {
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
+        {
+            likedBy = new ArrayList<>();
+            if ((boolean) dataSnapshot.getValue() == true)
+            {
+                likedBy.add(dataSnapshot.getKey());
+            }
+        }
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {}
+    };
+    ChildEventListener childEventListenerSelectSwitch = new ChildEventListener()
+    {
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
+        {
+            selectedBy = new ArrayList<>();
+            if ((boolean) dataSnapshot.getValue() == true)
+            {
+                selectedBy.add(dataSnapshot.getKey());
+            }
+        }
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {}
+    };
     //
     @Override
     protected void onCleared()
@@ -241,45 +245,63 @@ public class RestaurantViewModel extends ViewModel
         }
         super.onCleared();
     }
-    FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
-    FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
-
-    ChildEventListener childEventListener = new ChildEventListener() {
+    /*ChildEventListener childEventListener = new ChildEventListener()
+    {
         @Override
-        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-//            Log.d("hohoho", String.valueOf(place.getValue().likedBy.size()));
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
+        {
             if ((boolean) dataSnapshot.getValue() == true)
-            {//place.getValue().likedBy.add(mFirebaseUser.getUid());
-                place.getValue().like = true;}
+                place.getValue().like = true;
             else if ((boolean) dataSnapshot.getValue() == false)
-            {//place.getValue().likedBy.remove(mFirebaseUser.getUid());
-                place.getValue().like = false;}
-
-
+                place.getValue().like = false;
         }
-
         @Override
-        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            //if ((boolean) dataSnapshot.getValue() == true)
-
-        }
-
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
         @Override
-        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-        }
-
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
         @Override
-        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-        }
-
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
         @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
+        public void onCancelled(@NonNull DatabaseError databaseError) {}
+    };
+    ChildEventListener childEventListener2 = new ChildEventListener()
+    {
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
+        {
+            if ((boolean) dataSnapshot.getValue() == true)
+                place.getValue().selected = true;
+            else if ((boolean) dataSnapshot.getValue() == false)
+                place.getValue().selected = false;
         }
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {}
     };
 
+    ChildEventListener childEventListener3 = new ChildEventListener()
+    {
+        @Override
+        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
+        {
+            if ((boolean) dataSnapshot.getValue() == true)
+            {
+                Log.d("likedby", dataSnapshot.getKey());
+                likedBy.add(dataSnapshot.getKey());
+            }
+        }
+        @Override
+        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+        @Override
+        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+        @Override
+        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {}
+    };*/
 }

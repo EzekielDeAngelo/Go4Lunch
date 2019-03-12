@@ -28,6 +28,7 @@ public class RestaurantsFragment extends BaseFragment
 {
     @BindView(R.id.restaurant_recyclerview) RecyclerView restaurantRecyclerView;
     private RestaurantViewModel viewModel;
+    private RestaurantsAdapter adapter;
     // Required empty public constructor
     public RestaurantsFragment() {}
     //
@@ -39,24 +40,25 @@ public class RestaurantsFragment extends BaseFragment
 
         viewModel = ViewModelProviders.of(getActivity()).get("RestaurantViewModel", RestaurantViewModel.class);
         restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //restaurantRecyclerView.setAdapter(new RestaurantsAdapter(viewModel, this, (RestaurantsAdapter.OnRestaurantClickedListener) getActivity()));
         observeViewModel();
     }
-    public void onResume()
-    {
-        super.onResume();
-        observeViewModel();
-    }
+public void onResume() {
+    super.onResume();
+    observeViewModel();
+    adapter.notifyDataSetChanged();
 
+}
     //
-    private void observeViewModel()
+    public void observeViewModel()
     {
 
         viewModel.getPlaces().observe(this, places ->
         {
-            Log.d("rotototo", String.valueOf(places.size()));
+
 
             restaurantRecyclerView.setAdapter(new RestaurantsAdapter(((RestaurantsAdapter.OnRestaurantClickedListener) getActivity())));
-                RestaurantsAdapter adapter = (RestaurantsAdapter) restaurantRecyclerView.getAdapter();
+                adapter = (RestaurantsAdapter) restaurantRecyclerView.getAdapter();
                 adapter.setData(places);
          /*   viewModel.getPlace((String) marker.getTag()).observe(getActivity(), place ->
             {

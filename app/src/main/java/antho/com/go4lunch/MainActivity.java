@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
             startActivity(new Intent(this, SignInActivity.class));
+            if (mFirebaseUser != null)
             viewModel.writeNewUser(mFirebaseUser);
 
             finish();
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
     //
     @Override
-    public void onItemClicked(String id, String name, String address, String photo, String phone, String website, boolean like)
+    public void onItemClicked(String id, String name, String address, String photo, String phone, String website, boolean like, boolean selected)
     {
         Intent intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
         intent.putExtra("id", id);
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         intent.putExtra("phone", phone);
         intent.putExtra("website", website);
         intent.putExtra("like", like);
+        intent.putExtra("selected", selected);
         startActivity(intent);
     }
 }

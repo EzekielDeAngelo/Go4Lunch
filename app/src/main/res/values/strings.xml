@@ -10,7 +10,9 @@
     <string name="fb_login_protocol_scheme">fb224572028439433</string>
     <string name="facebook_sign_in">SIGN IN WITH FACEBOOK</string>
     <string name="google_sign_in">SIGN IN WITH GOOGLE</string>
-
+    <string name="twitter_sign_in">SIGN IN WITH TWITTER</string>
+    <string name="twitter_consumer_key">FcIcSbQJRl662GfkT9yu5tJas</string>
+    <string name="twitter_consumer_secret">xZH482a6O7C62fL28fueVpHfYIFMGVIGMxSFn2fHVUbIrOg82O</string>
     <string name="search">Search</string>
     <string name="welcome_msg">Welcome!</string>
     <string name="sign_out">Sign Out</string>

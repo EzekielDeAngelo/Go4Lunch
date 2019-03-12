@@ -26,8 +26,6 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     public WorkmatesAdapter (WorkmateViewModel viewModel, LifecycleOwner owner/*List<Workmate> workmates*/)
     {
         viewModel.getWorkmates().observe(owner, this::setData);
-        //this.workmates = workmates;
-
     }
     @NonNull
     @Override
@@ -50,9 +48,9 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     // Add news list data if available
     public void setData(List<Workmate> workmatesList)
     {
-        if (workmatesList.size() > 0  /*workmates != null*/)
+        if (workmatesList.size() > 0)
         {
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffCallback(workmates, workmatesList));
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new WorkmatesDiffCallback(workmates, workmatesList));
             workmates.clear();
             workmates.addAll(workmatesList);
             diffResult.dispatchUpdatesTo(this);
@@ -62,7 +60,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
             workmates.clear();
             notifyDataSetChanged();
         }
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
     static final class WorkmatesViewHolder extends RecyclerView.ViewHolder
     {
@@ -81,7 +79,10 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
         void bind(Workmate workmate)
         {
             this.workmate = workmate;
-            name.setText(workmate.name + " is going to eat at " + workmate.restaurantId);
+            if (workmate.restaurantId == null)
+                name.setText(workmate.name + " hasn't decided yet.");
+            else
+                name.setText(workmate.name + " is going to eat at " + workmate.restaurantId);
             /*address.setText(workmate.address());
             Picasso.Builder builder = new Picasso.Builder(thumbnail.getContext());
             builder.downloader(new OkHttp3Downloader(thumbnail.getContext()));

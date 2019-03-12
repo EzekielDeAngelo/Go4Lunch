@@ -28,6 +28,8 @@ public abstract class Place
     public abstract List<PlacePhotos> photos();
     public String thumb;
     public List<String> likedBy;
+    public List<String> selectedBy;
+    public boolean selected;
     public boolean like;
     public int stars;
     // Creates a Moshi adapter for this data
