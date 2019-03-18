@@ -6,18 +6,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -34,7 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /** **/
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, RestaurantsAdapter.OnRestaurantClickedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, RestaurantsAdapter.OnRestaurantClickedListener, NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.navigation)
     BottomNavigationView bottomNavigationView;
     private TextView mTextMessage;
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final String MAP_VIEW_TAG = "MAP_VIEW_TAG";
     private static final String LIST_VIEW_TAG = "LIST_VIEW_TAG";
     private static final String WORKMATES_VIEW_TAG = "WORKMATES_VIEW_TAG";
-
+    private DrawerLayout drawerLayout;
     private WorkmateViewModel viewModel;
     //
     @Override
@@ -86,10 +94,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             viewModel.writeNewUser(mFirebaseUser);
         }
 
+
         fragmentManager = getSupportFragmentManager();
         int selectedIndex = savedInstanceState == null ? 0 : savedInstanceState.getInt(SELECTED_INDEX_KEY);
         loadFirstFragment(selectedIndex);
         setUpBottomNavigation();
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer,  toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
     }
     // Loads fragment based on index given as parameter
     private void loadFirstFragment(int selectedIndex)
@@ -183,16 +205,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
     //
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
         {
+
             case R.id.search_item:
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
@@ -230,6 +253,39 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         intent.putExtra("selected", selected);
         startActivity(intent);
     }
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_selection) {
+            // Handle the camera action
+        }
+        if (id == R.id.nav_settings) {
+            // Handle the camera action
+        }
+        if (id == R.id.nav_sign_out) {
+            // Handle the camera action
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 }
 
 
