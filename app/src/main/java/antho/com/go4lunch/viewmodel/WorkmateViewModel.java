@@ -8,6 +8,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -18,12 +19,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import antho.com.go4lunch.model.workmate.Workmate;
+import durdinapps.rxfirebase2.DataSnapshotMapper;
+import durdinapps.rxfirebase2.RxFirebaseDatabase;
+import durdinapps.rxfirebase2.RxFirebaseQuery;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 /** **/
 public class WorkmateViewModel extends ViewModel
 {
     private MutableLiveData<List<Workmate>> workmates;
     private MutableLiveData<Workmate> workmate;
+    private MutableLiveData<List<Workmate>> workmatesPerRestaurant;
     protected DatabaseReference databaseReference;
     private Disposable disposable;
     // Constructor
@@ -35,6 +42,7 @@ public class WorkmateViewModel extends ViewModel
         {
             workmates = new MutableLiveData<List<Workmate>>();
             workmate = new MutableLiveData<Workmate>();
+            workmatesPerRestaurant = new MutableLiveData<List<Workmate>>();
         }
         loadWorkmates();
         loadWorkmate(mFirebaseUser.getUid());
@@ -44,36 +52,87 @@ public class WorkmateViewModel extends ViewModel
         return workmates; }
     public LiveData<Workmate> getWorkmate(String id) {
         loadWorkmate(id); return workmate; }
+    public LiveData<List<Workmate>> getWorkmatesPerRestaurants (String restaurantId){ loadWorkmatesPerRestaurants(restaurantId); return workmatesPerRestaurant;}
     //
     List<Workmate> wmList = new ArrayList<>();
     Workmate wm;
     //
+    private void loadWorkmatesPerRestaurants(String restaurantId)
+    {
+      wmList = workmates.getValue();
+      Log.d("rototo", String.valueOf(wmList.size()));
+
+
+    }
+
+
     private void loadWorkmate(String id)
     {
+
         DatabaseReference workmateDatabaseReference = FirebaseDatabase.getInstance().getReference("workmate").child(id);
-        workmateDatabaseReference.addValueEventListener(new ValueEventListener() {
+        RxFirebaseDatabase.observeSingleValueEvent(workmateDatabaseReference, Workmate.class).subscribeOn(Schedulers.io()).subscribe(wm ->
+        {
+            workmate.postValue(wm);
+
+
+        });/*
+        DatabaseReference workmateDatabaseReference = FirebaseDatabase.getInstance().getReference("workmate");
+
+        RxFirebaseDatabase.observeSingleValueEvent(workmateDatabaseReference, DataSnapshotMapper.listOf(Workmate.class)).subscribe(wm ->
+        {
+            Log.d("patatie", String.valueOf(wm.size()));
+            //workmate.postValue(wm);
+        });
+        /*DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference from = reference.child("workmate");
+        Query where = reference.child("workmate").child(id).child("restaurantId");
+        Log.d("patati",((DatabaseReference) where).getKey());
+        RxFirebaseQuery.getInstance().filterByRefs(from, where).asList().subscribe(dataSnapshots ->
+        {  Log.d("patataoes", String.valueOf(dataSnapshots.size()));
+           for (DataSnapshot dataSnapshot : dataSnapshots)
+           {
+               Workmate wm = dataSnapshot.getValue(Workmate.class);
+
+           }
+        });/*
+        RxFirebaseDatabase.observeChildEvent(query).subscribeOn(Schedulers.io())
+                .subscribe(workmate ->
+                {wm = (Workmate) workmate.getValue();
+                        Log.d("patatoes",workmate.getKey());
+                });
+        /*RxFirebaseDatabase.observeSingleValueEvent(query, Workmate.class)
+
+                .subscribe(userData -> (userData),
+
+                        throwable -> manageError(throwable));
+
+*/
+  /*      workmateDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 //Workmate wm = dataSnapshot.getValue(Workmate.class);
                 //if (wm != null)
-
-
+                //dataSnapshot.getValue();
+                //wm=null;
                 //wmList.clear();
                 Iterable<DataSnapshot> data = dataSnapshot.getChildren();
-                if (dataSnapshot.child("restaurantId").exists()) Log.d("wm","a");
+                //wm = dataSnapshot.getValue(Workmate.class);
+
                 for (DataSnapshot workmateData : data)
                 {
 
 
 
-                    wm = workmateData.child("restaurantId").getValue(Workmate.class);
+                    //wm = workmateData.getValue(Workmate.class);
 
 
                 }
                 //workmates.postValue(wmList);
                 if (wm != null)
-                    workmate.postValue(wm);
+                {  workmate.postValue(wm);
+
+                }
                 //Log.d("wm", wm.name);
                     }
 
@@ -84,11 +143,13 @@ public class WorkmateViewModel extends ViewModel
 
 
 
-        });
+        });*/
     }
     private void loadWorkmates() {
 
+
         databaseReference = FirebaseDatabase.getInstance().getReference("workmate");
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -142,10 +203,10 @@ public class WorkmateViewModel extends ViewModel
         databaseReference.child(user.getUid()).child("name").setValue(user.getDisplayName());
     }
     public void selectPlace(FirebaseUser user, String restaurantId)
-    {loadWorkmate(user.getUid());
+    {
+        loadWorkmate(user.getUid());
         //if (databaseReference.child(user.getUid()).child("restaurantId").getKey() == restaurantId)
-        if (selectedRestaurantId != null)
-            Log.d("lolol", selectedRestaurantId);
+
         //selectedRestaurantId = restaurantId;
 
         databaseReference.child(user.getUid()).child("restaurantId").setValue(restaurantId);

@@ -20,6 +20,7 @@ allprojects {
         google()
         jcenter()
         //mavenCentral()
+        maven { url "https://jitpack.io"}
 
     }
 }
@@ -33,8 +34,8 @@ task clean(type: Delete) {
             constraintVersion = "1.1.3"
             lifecycleVersion = "1.1.1"
             retrofitVersion = '2.3.0'
-            rxJavaVersion = '2.1.4'
-            rxAndroidVersion = '2.0.1'
+            rxJavaVersion = '2.1.10'
+            rxAndroidVersion = '2.0.2'
             rxCallAdapterVersion = '2.3.0'
             autoValueVersion = '1.5.1'
             moshiVersion = '1.5.0'

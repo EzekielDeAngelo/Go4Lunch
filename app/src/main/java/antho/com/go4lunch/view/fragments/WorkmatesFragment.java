@@ -32,7 +32,7 @@ public class WorkmatesFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(getActivity()).get("WorkmateViewModel", WorkmateViewModel.class);
         workmatesRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        workmatesRecyclerView.setAdapter(new WorkmatesAdapter(viewModel, this));
+
         observeViewModel();
     }
     //
@@ -40,6 +40,7 @@ public class WorkmatesFragment extends BaseFragment
     {
         viewModel.getWorkmates().observe(getActivity(), workmates ->
         {
+            workmatesRecyclerView.setAdapter(new WorkmatesAdapter(((WorkmatesAdapter.OnWorkmateClickedListener) getActivity())));
             WorkmatesAdapter adapter = (WorkmatesAdapter) workmatesRecyclerView.getAdapter();
             adapter.setData(workmates);
         });

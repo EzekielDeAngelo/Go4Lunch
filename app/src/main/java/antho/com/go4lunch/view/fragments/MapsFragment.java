@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import antho.com.go4lunch.MainActivity;
 import antho.com.go4lunch.base.BaseFragment;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.model.restaurant.places.Place;
@@ -50,7 +51,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 /** **/
-public class MapsFragment extends BaseFragment implements OnMapReadyCallback
+public class MapsFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener
 {
     GoogleMap mMap;
     SupportMapFragment mapFragment;
@@ -140,6 +141,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
         {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
+        mMap.setOnInfoWindowClickListener(this);
     }
     //
     private void updateLocationUI()
@@ -206,25 +208,18 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
     // Get the best and most recent location of the device, which may be null in rare cases when a location is not available.
     private void getDeviceLocation()
     {
-        try
-        {
-            if (mLocationPermissionGranted)
-            {
+        try {
+            if (mLocationPermissionGranted) {
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnSuccessListener(getActivity(), new OnSuccessListener<Location>()
-                {
+                locationResult.addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
-                    public void onSuccess(Location location)
-                    {
+                    public void onSuccess(Location location) {
 
-                        if (location != null)
-                        {
+                        if (location != null) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = location;
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                        }
-                        else
-                        {
+                        } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             //Log.e(TAG, "Exception: %s", task.getException());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
@@ -243,8 +238,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                         viewModel.getPlaces().observe(getActivity(), new Observer<List<Place>>() {
                             @Override
                             public void onChanged(List<Place> places) {
-                                for (int i = 0 ; i < places.size() ; i++)
-                                {
+                                for (int i = 0; i < places.size(); i++) {
                                     Double restaurantLat = Double.parseDouble(places.get(i).lat);
                                     Double restaurantLng = Double.parseDouble(places.get(i).lng);
                                     LatLng restaurantLatLng = new LatLng(restaurantLat, restaurantLng);
@@ -259,34 +253,32 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                         @Override
                                         public boolean onMarkerClick(Marker marker) {
+
                                             viewModel.getPlace((String) marker.getTag()).observe(getActivity(), place ->
                                             {
-                                                 selectedPlace = place;
+                                                if (selectedPlace != place)
+                                                    selectedPlace = place;
                                             });
                                             return false;
                                         }
                                     });
 
-                                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener()
+
+//mMap.setOnInfoWindowClickListener(v -> listener.onItemClicked());
+                                 //   mMap.setOnInfoWindowClickListener(getActivity());
+                                   /* mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener()
                                     {
-                                        @Override
-                                        public void onInfoWindowClick(Marker marker)
-                                        {
 
-                                                Intent intent = new Intent(getContext(), RestaurantDetailsActivity.class);
-                                                intent.putExtra("id", (String) marker.getTag());
-                                                intent.putExtra("photo", selectedPlace.thumb);
-                                                intent.putExtra("name", selectedPlace.name());
-                                                intent.putExtra("address", selectedPlace.address());
-                                                intent.putExtra("phone", selectedPlace.phone());
-                                                intent.putExtra("website", selectedPlace.website());
-                                                intent.putExtra("like", selectedPlace.like);
-                                                intent.putExtra("selected", selectedPlace.selected);
-                                                startActivity(intent);
-                                                marker.hideInfoWindow();
-                                        }
-                                    });
 
+
+
+
+
+                                }
+                            }
+                        });
+                    }
+                });*/
                                 }
                             }
                         });
@@ -294,6 +286,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
                 });
             }
         }
+
         catch(SecurityException e)
         {
             Log.e("Exception: %s", e.getMessage());
@@ -330,6 +323,23 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
     {
         return R.layout.fragment_maps;
     }
+
+    @Override
+    public void onInfoWindowClick(Marker marker)
+    {
+        Intent intent = new Intent(getContext(), RestaurantDetailsActivity.class);
+        intent.putExtra("id", (selectedPlace.placeId));
+        intent.putExtra("photo", selectedPlace.thumb);
+        intent.putExtra("name", selectedPlace.name());
+        intent.putExtra("address", selectedPlace.address());
+        intent.putExtra("phone", selectedPlace.phone());
+        intent.putExtra("website", selectedPlace.website());
+        intent.putExtra("like", selectedPlace.like);
+        intent.putExtra("selected", selectedPlace.selected);
+        startActivity(intent);
+        marker.hideInfoWindow();
+    }
+
     // Show toast details when points of interest are clicked // OPTIONAL FEATURE
     /*@Override
     public void onPoiClick(PointOfInterest poi)
@@ -357,4 +367,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback
     public void onMyLocationClick(@NonNull Location location) {
         Toast.makeText(getContext(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
     }*/
+    public interface OnMarkerClickedListener
+    {
+        void onItemClicked(String id);
+    }
 }

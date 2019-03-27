@@ -19,9 +19,9 @@ public /*abstract*/ class Workmate
     public List<String> likedRestaurants;
 
     public Workmate(){}
-    public Workmate(String id, String username, @Nullable String restaurantId, @Nullable List<String> likedRestaurants) {
+    public Workmate(/*String id,*/ String username, @Nullable String restaurantId, @Nullable List<String> likedRestaurants) {
         this.name = username;
-        this.id = id;
+        //this.id = id;
         this.restaurantId = restaurantId;
         this.likedRestaurants = likedRestaurants;
     }

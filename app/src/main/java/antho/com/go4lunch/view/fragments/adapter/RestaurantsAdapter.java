@@ -86,7 +86,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(v -> listener.onItemClicked(place.placeId, place.name(), place.address(), place.thumb, place.phone(), place.website(), place.like, place.selected));
+            itemView.setOnClickListener(v -> listener.onItemClicked(place.placeId));
         }
         void bind(Place place)
         {
@@ -102,7 +102,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     // On click listener with
     public interface OnRestaurantClickedListener
     {
-        void onItemClicked(String id, String name, String address, String photo, String phone, String website, boolean like, boolean selected);
+        void onItemClicked(String id);
     }
 }
 

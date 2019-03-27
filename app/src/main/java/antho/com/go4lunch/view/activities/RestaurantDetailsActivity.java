@@ -18,7 +18,11 @@ import com.squareup.picasso.Picasso;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
+import antho.com.go4lunch.view.activities.adapter.RestaurantDetailsAdapter;
+import antho.com.go4lunch.view.fragments.adapter.WorkmatesAdapter;
 import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import antho.com.go4lunch.viewmodel.ViewModelFactory;
 import antho.com.go4lunch.viewmodel.WorkmateViewModel;
@@ -34,6 +38,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity
     @BindView(R.id.call) Button call;
     @BindView(R.id.website) Button website;
     @BindView(R.id.like) ToggleButton like;
+    @BindView(R.id.restaurant_details_recyclerview) RecyclerView recyclerView;
     private WorkmateViewModel viewModel;
     private RestaurantViewModel restaurantViewModel;
     //
@@ -43,6 +48,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_details);
         ButterKnife.bind(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        viewModel = ViewModelProviders.of(this).get("WorkmateViewModel", WorkmateViewModel.class);
+
 
         if (getIntent().hasExtra("id"))
         {
@@ -56,7 +64,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity
         }
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        viewModel = ViewModelProviders.of(this).get("WorkmateViewModel", WorkmateViewModel.class);
+        restaurantViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
 
         select.setChecked(getIntent().getBooleanExtra("selected", false));
         select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
@@ -67,10 +75,10 @@ public class RestaurantDetailsActivity extends AppCompatActivity
                 if (isChecked)
                 {
                     viewModel.selectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                    viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
+                    /*viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
                     {
                         workmate.restaurantId = getIntent().getStringExtra("name");
-                    });
+                    });*/
                     restaurantViewModel.selectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
                     restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
                     {
@@ -82,9 +90,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity
                 {
 
                     viewModel.deselectPlace(mFirebaseUser, getIntent().getStringExtra("name"));
-                    viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
+         /*           viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
                     {
-                    });
+                    });*/
                     restaurantViewModel.deselectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
                     restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
                     {
@@ -105,7 +113,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity
             intent.putExtra("url", getIntent().getStringExtra("website"));
             startActivity(intent);
         });
-        restaurantViewModel = ViewModelProviders.of(this, new ViewModelFactory(null)).get("RestaurantViewModel", RestaurantViewModel.class);
+
         like.setChecked(getIntent().getBooleanExtra("like", false));
         like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -125,9 +133,23 @@ public class RestaurantDetailsActivity extends AppCompatActivity
                     restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
                     {
                         place.likedBy.remove(mFirebaseUser.getUid());
+                        Log.d("onLikedCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.like)));
                     });
                 }
             }
+        });
+        observeViewModel();
+    }
+
+    public void observeViewModel()
+    {
+
+        viewModel.getWorkmates().observe(this, workmates ->
+        {
+
+            recyclerView.setAdapter(new RestaurantDetailsAdapter());
+            RestaurantDetailsAdapter adapter = (RestaurantDetailsAdapter) recyclerView.getAdapter();
+            adapter.setData(workmates, getIntent().getStringExtra("id"));
         });
     }
 }

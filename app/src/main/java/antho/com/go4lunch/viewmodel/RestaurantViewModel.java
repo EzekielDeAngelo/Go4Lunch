@@ -48,26 +48,35 @@ public class RestaurantViewModel extends ViewModel
     public RestaurantViewModel(){}
     public RestaurantViewModel(String location)
     {
-        //if (restaurants == null)
+        if (places == null)
         {
-            restaurants = new MutableLiveData<List<Restaurant>>();
-            places = new MutableLiveData<List<Place>>();
-            place = new MutableLiveData<Place>();
+
+
+
         }
+        restaurants = new MutableLiveData<List<Restaurant>>();
+        place = new MutableLiveData<Place>();
         mLocation = location;
         loadRestaurants(mLocation);
     }
     //
     //public LiveData<List<Restaurant>> getRestaurants() { return restaurants; }
     public LiveData<List<Place>> getPlaces() { return places; }
-    public LiveData<Place> getPlace(String id) {  loadPlace(id); return place;}
+    public LiveData<Place> getPlace(String id) { loadPlace(id); return place;}
     public void loadPlace(String id)
     {
+        place = new MutableLiveData<>();
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
         databaseReference.child(id).child("likedBy").addChildEventListener(childEventListenerLikeSwitch);
         databaseReference.child(id).child("selectedBy").addChildEventListener(childEventListenerSelectSwitch);
-        Call<PlaceResponse> restaurantCall = RestaurantApi.getInstance().getRestaurants(id);
+
+        List<Place> lp = places.getValue();
+        for (int i = 0; i < lp.size() ; i++)
+            if (lp.get(i).placeId.equals(id))
+            {place.postValue(lp.get(i));
+            Log.d("rototo",lp.get(i).thumb);}
+        /*Call<PlaceResponse> restaurantCall = RestaurantApi.getInstance().getRestaurants(id);
         restaurantCall.enqueue(new Callback<PlaceResponse>()
         {
              @Override
@@ -83,9 +92,9 @@ public class RestaurantViewModel extends ViewModel
                          break;
                      }
 
-                 response.body().result().likedBy = likedBy;
-                 response.body().result().selectedBy = selectedBy;
-                 if (selectedBy.contains(mFirebaseUser.getUid()))
+                 //response.body().result().likedBy = likedBy;
+                 //response.body().result().selectedBy = selectedBy;
+                 if (response.body().result().selectedBy.contains(mFirebaseUser.getUid()))
                      response.body().result().selected = true;
                  else
                      response.body().result().selected = false;
@@ -96,16 +105,18 @@ public class RestaurantViewModel extends ViewModel
 
                  response.body().result().placeId = id;
                  place.postValue(response.body().result());
+
              }
              @Override
              public void onFailure(Call<PlaceResponse> call, Throwable t)
              {
              }
-         });
+         });*/
     }
     //
     private void loadRestaurants(String location)
     {
+        places = new MutableLiveData<List<Place>>();
         Single<RestaurantResponse> restaurantsCall;
         restaurantsCall = RestaurantApi.getInstance().getRestaurantsId(location);
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
@@ -180,17 +191,15 @@ public class RestaurantViewModel extends ViewModel
     }
     public void selectPlace(FirebaseUser user, String restaurantId)
     {
-        id = restaurantId;
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
         databaseReference.child(restaurantId).child("selectedBy").child(user.getUid()).setValue(true);
     }
     public void deselectPlace(FirebaseUser user, String restaurantId)
     {
-        id = restaurantId;
         databaseReference = FirebaseDatabase.getInstance().getReference("restaurants");
         databaseReference.child(restaurantId).child("selectedBy").child(user.getUid()).setValue(false);
     }
-String id;
+
     FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
@@ -222,6 +231,7 @@ String id;
             selectedBy = new ArrayList<>();
             if ((boolean) dataSnapshot.getValue() == true)
             {
+                Log.d("onChildAddedSelection:" , dataSnapshot.getKey());
                 selectedBy.add(dataSnapshot.getKey());
             }
         }

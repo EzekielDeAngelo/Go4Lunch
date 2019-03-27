@@ -134,6 +134,7 @@
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-collection-16.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.twitter.sdk.android:tweet-ui-3.3.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: javax.inject:javax.inject:1@jar" level="project" />
+    <orderEntry type="library" name="Gradle: io.reactivex.rxjava2:rxjava:2.1.10@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.retrofit2:retrofit:2.3.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-places-placereport-16.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.moshi:moshi:1.5.0@jar" level="project" />
@@ -152,6 +153,7 @@
     <orderEntry type="library" name="Gradle: com.jakewharton:butterknife-runtime-9.0.0-rc2" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata-core-2.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.parse.bolts:bolts-applinks:1.4.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: org.reactivestreams:reactive-streams:1.0.2@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.test.espresso:espresso-core-3.1.1" level="project" />
     <orderEntry type="library" name="Gradle: androidx.media:media-1.0.0-rc01" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.retrofit2:converter-moshi:2.3.0@jar" level="project" />
@@ -223,11 +225,11 @@
     <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat-1.1.0-alpha01" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement-16.1.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.transition:transition-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.reactivestreams:reactive-streams:1.0.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-common:2.0.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.frangsierra:RxFirebase-1.5.6" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.android:facebook-login-4.38.1" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.android:facebook-core-4.38.1" level="project" />
-    <orderEntry type="library" name="Gradle: io.reactivex.rxjava2:rxandroid-2.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.reactivex.rxjava2:rxandroid-2.0.2" level="project" />
     <orderEntry type="library" name="Gradle: androidx.arch.core:core-runtime-2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.12@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.legacy:legacy-support-core-ui-1.0.0" level="project" />
@@ -240,6 +242,5 @@
     <orderEntry type="library" name="Gradle: androidx.localbroadcastmanager:localbroadcastmanager-1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-16.0.5" level="project" />
     <orderEntry type="library" name="Gradle: androidx.cursoradapter:cursoradapter-1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: io.reactivex.rxjava2:rxjava:2.1.4@jar" level="project" />
   </component>
 </module>
