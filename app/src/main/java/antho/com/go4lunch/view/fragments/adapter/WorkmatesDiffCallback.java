@@ -1,10 +1,9 @@
 package antho.com.go4lunch.view.fragments.adapter;
-
 import java.util.List;
 
 import androidx.recyclerview.widget.DiffUtil;
 import antho.com.go4lunch.model.workmate.Workmate;
-
+/** Overrides diffUtil methods to improve software performance **/
 public class WorkmatesDiffCallback extends DiffUtil.Callback
 {
     private final List<Workmate> oldList;

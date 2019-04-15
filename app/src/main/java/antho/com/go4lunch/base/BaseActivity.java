@@ -1,5 +1,4 @@
 package antho.com.go4lunch.base;
-/** Base activity**/
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -25,35 +24,19 @@ public abstract class BaseActivity  extends AppCompatActivity
         setContentView(layoutRes());
 
         configureToolbar();
-        /*if(getSupportActionBar() != null)
-        {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }*/
         ButterKnife.bind(this);
     }
-    //
-    private void configureToolbar() {
+    // Configure toolbar and set it as app action bar
+    private void configureToolbar()
+    {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
+        if (toolbar != null)
+        {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-
-
     }
 
-    // Set a return value as a layout resource reference
-    @LayoutRes
-    protected abstract int layoutRes();
-    //
-
-    @Override
-    public boolean onSupportNavigateUp()
-    {
-        onBackPressed();
-        return super.onSupportNavigateUp();
-    }
     // Helper method to display a toast
     protected void showToast(String message)
     {
@@ -61,4 +44,16 @@ public abstract class BaseActivity  extends AppCompatActivity
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
+    //
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+    // Set a return value as a layout resource reference
+    @LayoutRes
+    protected abstract int layoutRes();
+    //
+
 }

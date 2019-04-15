@@ -7,17 +7,18 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.Nullable;
-
+/** Data model for user object **/
 @AutoValue
-public /*abstract*/ class User
+public class User
 {
-    public /*abstract*/ String name;
-    public /*abstract*/ String id;
+    public String name;
+    public String id;
     public String restaurantId;
     public List<String> likedRestaurants;
 
     public User(){}
-    public User(String id, String username, @Nullable String restaurantId, @Nullable List<String> likedRestaurants) {
+    public User(String id, String username, @Nullable String restaurantId, @Nullable List<String> likedRestaurants)
+    {
         this.name = username;
         this.id = id;
         this.restaurantId = restaurantId;

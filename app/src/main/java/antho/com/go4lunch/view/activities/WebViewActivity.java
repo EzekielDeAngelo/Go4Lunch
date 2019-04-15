@@ -1,5 +1,4 @@
 package antho.com.go4lunch.view.activities;
-
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -15,13 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.base.BaseActivity;
 import butterknife.BindView;
-
+/** Activity to display restaurant website content as a web page **/
 public class WebViewActivity extends BaseActivity
 {
-    @BindView(R.id.webview)
-    WebView webView;
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
+    @BindView(R.id.webview) WebView webView;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
     // Load web view with article url
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)

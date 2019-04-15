@@ -1,5 +1,4 @@
 package antho.com.go4lunch.view.activities;
-/** Sign in activity**/
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,109 +42,82 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import antho.com.go4lunch.MainActivity;
 import antho.com.go4lunch.R;
-/** Handles Google and Facebook sign in functions **/
+/** Handles google, facebook and twitter sign in behavior **/
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
 {
-    private static final String TAG = "SignInActivity";
-    private static final int RC_SIGN_IN = 9001;
-    private Button mSignInButton;
-    private GoogleApiClient mGoogleApiClient;
-    // Firebase instance variables
+    Button googleSignInButton;
+    Button facebookSignInButton;
+    TwitterLoginButton twitterSignInButton;
     private FirebaseAuth mFirebaseAuth;
     private CallbackManager mCallbackManager;
-    TwitterLoginButton twitterLogin;
+    private GoogleApiClient mGoogleApiClient;
+    private static final String TAG = "SignInActivity";
+    private static final int RC_SIGN_IN = 9001;
+    // Set on click listener for sign in buttons and get firebase instance
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(
-
-                getString(R.string.twitter_consumer_key),
-
-                getString(R.string.twitter_consumer_secret));
-
-
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(getString(R.string.twitter_consumer_key), getString(R.string.twitter_consumer_secret));
         TwitterConfig twitterConfig = new TwitterConfig.Builder(this)
-
                 .twitterAuthConfig(authConfig)
-
                 .build();
-
-
         Twitter.initialize(twitterConfig);
         setContentView(R.layout.activity_sign_in);
-        // Assign fields
-        mSignInButton = (Button) findViewById(R.id.google_login_button);
-        // Set click listeners
-        mSignInButton.setOnClickListener(this);
+        mFirebaseAuth = FirebaseAuth.getInstance();
         // Configure Google Sign In
+        googleSignInButton = (Button) findViewById(R.id.google_login_button);
+        googleSignInButton.setOnClickListener(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        // Initialize FirebaseAuth
-        mFirebaseAuth = FirebaseAuth.getInstance();
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(LoginResult loginResult)
+            {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
-
             @Override
-            public void onCancel() {
+            public void onCancel()
+            {
                 Log.d(TAG, "facebook:onCancel");
                 FirebaseAuth.getInstance().signOut();
-                // ...
             }
-
             @Override
-            public void onError(FacebookException error) {
+            public void onError(FacebookException error)
+            {
                 Log.d(TAG, "facebook:onError", error);
-                // ...
             }
         });
-        Button facebookLogin = (Button) findViewById(R.id.facebook_login_button);
-        facebookLogin.setOnClickListener(new View.OnClickListener() {
+        facebookSignInButton = (Button) findViewById(R.id.facebook_login_button);
+        facebookSignInButton.setOnClickListener(view ->
+                LoginManager.getInstance().logInWithReadPermissions(SignInActivity.this, Arrays.asList("public_profile", "user_friends")));
+        // Configure Twitter Sign In
+        twitterSignInButton = findViewById(R.id.twitter_login_button);
+        twitterSignInButton.setCallback(new Callback<TwitterSession>()
+        {
             @Override
-            public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(SignInActivity.this, Arrays.asList("public_profile", "user_friends"));
-            }
-        });
-
-        twitterLogin = findViewById(R.id.twitter_login_button);
-
-        twitterLogin.setCallback(new Callback<TwitterSession>() {
-
-            @Override
-
-            public void success(Result<TwitterSession> result) {
-
+            public void success(Result<TwitterSession> result)
+            {
                 Log.d(TAG, "twitterLogin:success" + result);
-
                 handleTwitterSession(result.data);
-
             }
-
-
             @Override
-
-            public void failure(TwitterException exception) {
-
+            public void failure(TwitterException exception)
+            {
                 Log.w(TAG, "twitterLogin:failure", exception);
-
-                //updateUI(null);
-
             }
-
         });
     }
-    //
+    // On click listener for google sign in button
     @Override
     public void onClick(View v)
     {
@@ -156,29 +128,26 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 break;
         }
     }
-    //
+    // Launch sign in intent from google sign in API
     private void signIn()
     {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-    //
+    // An unresolvable error has occurred and google APIs (including sign-in) will not be available
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
-    //
+    // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        twitterLogin.onActivityResult(requestCode, resultCode, data);
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        twitterSignInButton.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN)
         {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -195,7 +164,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             }
         }
     }
-    //
+    // Logic to sign in with google credentials
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
     {
         Log.d(TAG, "firebaseAuthWithGooogle:" + acct.getId());
@@ -207,9 +176,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                     public void onComplete(@NonNull Task<AuthResult> task)
                     {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful())
                         {
                             Log.w(TAG, "signInWithCredential", task.getException());
@@ -218,13 +184,14 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                         }
                         else
                         {
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             finish();
                         }
                     }
                 });
     }
-    //
+    // Logic to sign in with facebook credentials
     private void handleFacebookAccessToken(AccessToken token)
     {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
@@ -240,7 +207,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                         {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            mFirebaseAuth.getCurrentUser();
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
                         } else
                         {
@@ -248,42 +215,37 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
                         }
                     }
                 });
     }
+    // Logic to sign in with twitter credentials
     private void handleTwitterSession(TwitterSession session)
     {
         Log.d(TAG, "handleTwitterSession:" + session);
-
         AuthCredential credential = TwitterAuthProvider.getCredential(
                 session.getAuthToken().token,
                 session.getAuthToken().secret);
-
         mFirebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            /*FirebaseUser user =*/ mFirebaseAuth.getCurrentUser();
-                            startActivity(new Intent(SignInActivity.this, MainActivity.class));
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(SignInActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
+                .addOnCompleteListener(this, task ->
+                {
+                    if (task.isSuccessful())
+                    {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success");
+                        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                    }
+                    else
+                    {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        Toast.makeText(SignInActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
 
-                        // ...
                     }
                 });
     }
-
 }
 
 

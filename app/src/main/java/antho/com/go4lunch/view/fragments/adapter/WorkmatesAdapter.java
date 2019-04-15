@@ -1,6 +1,4 @@
 package antho.com.go4lunch.view.fragments.adapter;
-/** **/
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,25 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.model.workmate.Workmate;
-import antho.com.go4lunch.viewmodel.WorkmateViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-/** **/
+/** Adapter to create and populate recycler view for workmates **/
 public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.WorkmatesViewHolder>
 {
     private final List<Workmate> workmates = new ArrayList<>();
     private final OnWorkmateClickedListener listener;
     // Constructor
-    public WorkmatesAdapter (/*WorkmateViewModel viewModel, LifecycleOwner owner,*/ OnWorkmateClickedListener listener)
+    public WorkmatesAdapter (OnWorkmateClickedListener listener)
     {
-       // viewModel.getWorkmates().observe(owner, this::setData);
         this.listener = listener;
     }
+    // Creates view for recycler view with on click listener parameter
     @NonNull
     @Override
     public WorkmatesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -43,6 +39,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
     {
         holder.bind(workmates.get(position));
     }
+    // Return the list size
     @Override
     public int getItemCount()
     {
@@ -63,8 +60,8 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
             workmates.clear();
             notifyDataSetChanged();
         }
-        //notifyDataSetChanged();
     }
+    // Provides a reference to the views for each data item
     static final class WorkmatesViewHolder extends RecyclerView.ViewHolder
     {
         @BindView(R.id.name)
@@ -74,6 +71,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
         @BindView(R.id.thumbnail)
         ImageView thumbnail;
         private Workmate workmate;
+        // Bind view and set on click listener
         WorkmatesViewHolder(View itemView, OnWorkmateClickedListener listener)
         {
             super(itemView);
@@ -81,6 +79,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
 
             itemView.setOnClickListener(v -> listener.onItemClicked(workmate.restaurantId));
         }
+        // Bind data entries to appropriate view items
         void bind(Workmate workmate)
         {
             this.workmate = workmate;
@@ -95,6 +94,7 @@ public class WorkmatesAdapter extends RecyclerView.Adapter<WorkmatesAdapter.Work
                     .into(thumbnail);*/
         }
     }
+    // On click listener with id as parameter to open restaurant details activity
     public interface OnWorkmateClickedListener
     {
         void onItemClicked(String id);

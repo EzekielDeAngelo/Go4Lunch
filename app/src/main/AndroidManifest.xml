@@ -35,12 +35,6 @@
             android:name=".view.activities.RestaurantDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".view.activities.SearchActivity"
-            android:label="@string/search"
-
-            android:parentActivityName=".MainActivity"
-            />
-        <activity
             android:name=".view.activities.SettingsActivity"
             android:label="@string/settings"
 

@@ -1,8 +1,7 @@
 package antho.com.go4lunch.db;
-/** Moshi adapter factory **/
 import com.ryanharter.auto.value.moshi.MoshiAdapterFactory;
 import com.squareup.moshi.JsonAdapter;
-/** Creates an Moshi adapter **/
+/** Creates an moshi adapter **/
 @MoshiAdapterFactory
 public abstract class AdapterFactory implements JsonAdapter.Factory
 {

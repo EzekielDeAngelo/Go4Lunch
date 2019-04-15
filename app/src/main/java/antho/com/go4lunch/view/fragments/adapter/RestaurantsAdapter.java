@@ -1,6 +1,4 @@
 package antho.com.go4lunch.view.fragments.adapter;
-/** **/
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,26 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.model.restaurant.places.Place;
-import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-/** **/
+/**  Adapter to create and populate recycler view for restaurants **/
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.RestaurantViewHolder>
 {
     private final OnRestaurantClickedListener listener;
     private List<Place> restaurants = new ArrayList<>();
     // Constructor
-    public RestaurantsAdapter (/*RestaurantViewModel viewModel, LifecycleOwner owner, */OnRestaurantClickedListener listener)
+    public RestaurantsAdapter (OnRestaurantClickedListener listener)
     {
-        //viewModel.getPlaces().observe(owner, this::setData);
         this.listener = listener;
-        //this.restaurants = restaurants;
     }
+    // Creates view for recycler view with on click listener parameter
     @NonNull
     @Override
     public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -47,26 +42,21 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     {
         holder.bind(restaurants.get(position));
     }
+    // Return the list size
     @Override
     public int getItemCount()
     {
         return restaurants.size();
     }
-    // Add news list data if available
+    // Add restaurant list data if available
     public void setData(List<Place> places)
     {
         if (places != null)
         {
-            for (int i = 0 ; i < places.size(); i++)
-            {
-                Log.d("setdata places", places.get(i).name() + " : " + String.valueOf(places.get(i).like));
-            }
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new RestaurantDiffCallback(restaurants, places));
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new RestaurantsDiffCallback(restaurants, places));
             restaurants.clear();
             restaurants.addAll(places);
-
             diffResult.dispatchUpdatesTo(this);
-            notifyDataSetChanged();
         }
         else
         {
@@ -74,7 +64,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             notifyDataSetChanged();
         }
     }
-    //
+    // Provides a reference to the views for each data item
     static final class RestaurantViewHolder extends RecyclerView.ViewHolder
     {
         @BindView(R.id.name) TextView name;
@@ -82,12 +72,14 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         @BindView(R.id.thumbnail) ImageView thumbnail;
         @BindView(R.id.stars) TextView stars;
         private Place place;
+        // Bind view and set on click listener
         RestaurantViewHolder(View itemView, OnRestaurantClickedListener listener)
         {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(v -> listener.onItemClicked(place.placeId));
         }
+        // Bind data entries to appropriate view items
         void bind(Place place)
         {
             this.place = place;
@@ -99,7 +91,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                     .into(thumbnail);
         }
     }
-    // On click listener with
+    // On click listener with id as parameter to open restaurant details activity
     public interface OnRestaurantClickedListener
     {
         void onItemClicked(String id);

@@ -1,24 +1,29 @@
 package antho.com.go4lunch;
-/** Main Activity **/
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -32,7 +37,6 @@ import androidx.lifecycle.ViewModelProviders;
 import antho.com.go4lunch.base.BaseActivity;
 import antho.com.go4lunch.model.restaurant.places.Place;
 import antho.com.go4lunch.view.activities.RestaurantDetailsActivity;
-import antho.com.go4lunch.view.activities.SearchActivity;
 import antho.com.go4lunch.view.activities.SettingsActivity;
 import antho.com.go4lunch.view.activities.SignInActivity;
 import antho.com.go4lunch.view.fragments.RestaurantsFragment;
@@ -44,97 +48,97 @@ import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import antho.com.go4lunch.viewmodel.WorkmateViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+/** Load UI elements on application startup **/
+public class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, RestaurantsAdapter.OnRestaurantClickedListener, WorkmatesAdapter.OnWorkmateClickedListener, NavigationView.OnNavigationItemSelectedListener, PlaceSelectionListener
+{
+    @BindView(R.id.navigation) BottomNavigationView bottomNavigationView;
+    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
 
-/** **/
-public class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, RestaurantsAdapter.OnRestaurantClickedListener, WorkmatesAdapter.OnWorkmateClickedListener, NavigationView.OnNavigationItemSelectedListener {
-    @BindView(R.id.navigation)
-
-    BottomNavigationView bottomNavigationView;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
-    private View navHeader;
-    private TextView username;
-    private ImageView userImgProfile;
-    private TextView mTextMessage;
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
-    private String mUsername;
-    private String mPhotoUrl;
-    private String TAG = "";
-    public static final String ANONYMOUS = "anonymous";
     private GoogleApiClient mGoogleApiClient;
     private FragmentManager fragmentManager;
+    private WorkmateViewModel workmateViewModel;
+    private RestaurantViewModel restaurantViewModel;
+
+    private View navHeader;
+    private TextView userTextView;
+    private ImageView userImageView;
+
+    private FirebaseUser user;
+    private String userName;
+    private String photoUrl;
+
+    public static final String ANONYMOUS = "anonymous";
     private static final String SELECTED_INDEX_KEY = "selected_index";
     private static final String MAP_VIEW_TAG = "MAP_VIEW_TAG";
     private static final String LIST_VIEW_TAG = "LIST_VIEW_TAG";
     private static final String WORKMATES_VIEW_TAG = "WORKMATES_VIEW_TAG";
-    private DrawerLayout drawerLayout;
-    private WorkmateViewModel viewModel;
-    private RestaurantViewModel rViewModel;
+    //private String TAG = "";
+    //private TextView mTextMessage;
     //
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        // Set default username is anonymous.
-        mUsername = ANONYMOUS;
-        // Write a message to the database
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
-        // Initialize Firebase Auth
-
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
-        viewModel = ViewModelProviders.of(this).get(WorkmateViewModel.class);
-        if (mFirebaseUser == null) {
-            // Not signed in, launch the Sign In activity
-            startActivity(new Intent(this, SignInActivity.class));
-            if (mFirebaseUser != null) {
-
-                viewModel.writeNewUser(mFirebaseUser);
-            }
-            finish();
-            return;
-        } else {
-            mUsername = mFirebaseUser.getDisplayName();
-            if (mFirebaseUser.getPhotoUrl() != null) {
-                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-            }
-            viewModel.writeNewUser(mFirebaseUser);
-        }
-
+        Places.initialize(getApplicationContext(),"AIzaSyAuGzug9RNw6hQZvzetYY-VB5is8OLeS7w");
+        // Create a new Places client instance.
+        PlacesClient placesClient = Places.createClient(this);
+        workmateViewModel = ViewModelProviders.of(this).get(WorkmateViewModel.class);
+        initFirebaseAuth();
 
         fragmentManager = getSupportFragmentManager();
         int selectedIndex = savedInstanceState == null ? 0 : savedInstanceState.getInt(SELECTED_INDEX_KEY);
         loadFirstFragment(selectedIndex);
+
         setUpBottomNavigation();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar  , R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+    }
+    // Initialize Firebase Auth
+    private void initFirebaseAuth()
+    {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        // Set default user as anonymous.
+        userName = ANONYMOUS;
+        // Write a message to the database
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this , this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
+        if (user == null)
+        {
+            // Not signed in, launch the Sign In activity
+            startActivity(new Intent(this, SignInActivity.class));
+            if (user != null)
+                workmateViewModel.writeNewUser(FirebaseAuth.getInstance().getCurrentUser());
+            finish();
+            return;
+        }
+        else
+        {
+            userName = user.getDisplayName();
+            if (user.getPhotoUrl() != null)
+            {
+                photoUrl = user.getPhotoUrl().toString();
+            }
+            setUpNavigationDrawer();
+        }
+    }
+    // Set up drawer layout and navigation view
+    private void setUpNavigationDrawer()
+    {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar  , R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navHeader = navigationView.getHeaderView(0);
-        username = (TextView) navHeader.findViewById(R.id.username);
-        username.setText(mFirebaseUser.getDisplayName());
-        userImgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
+        userTextView = (TextView) navHeader.findViewById(R.id.username);
+        userTextView.setText(user.getDisplayName());
+        userImageView = (ImageView) navHeader.findViewById(R.id.img_profile);
     }
-
-    @Override
-    protected int layoutRes() {
-        return R.layout.activity_main;
-    }
-
     // Loads fragment based on index given as parameter
     private void loadFirstFragment(int selectedIndex)
     {
@@ -226,184 +230,20 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         fragmentTransaction.commitNowAllowingStateLoss();
     }
     //
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-    //
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-
-            case R.id.search_item:
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(intent);
-                return true;
-       /*     case R.id.sign_out_menu:
-                mFirebaseAuth.signOut();
-                LoginManager.getInstance().logOut();
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                mUsername = ANONYMOUS;
-                startActivity(new Intent(this, SignInActivity.class));
-                finish();
-                return true;*/
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    //
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
-    {
-
-    }
-    //
-    @Override
-    public void onItemClicked(String id)
-    {
-        OpenRestaurantDetailsActivity(id);
-/*if (rViewModel == null)
-        rViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
-
-            if (id != null)
-            {
-                //selectedPlace = null;
-
-                rViewModel.getPlace(id).observe(this, place ->
-                {
-                    if (place != selectedPlace)
-                    {  selectedPlace = place;
-
-
-
-                        intent = new Intent(getApplication(), RestaurantDetailsActivity.class);
-                        intent.putExtra("id", selectedPlace.placeId);
-                        intent.putExtra("photo", selectedPlace.thumb);
-                        intent.putExtra("name", selectedPlace.name());
-                        intent.putExtra("address", selectedPlace.address());
-                        intent.putExtra("phone", selectedPlace.phone());
-                        intent.putExtra("website", selectedPlace.website());
-                        intent.putExtra("like", selectedPlace.like);
-                        intent.putExtra("selected", selectedPlace.selected);
-
-                        startActivity(intent);
-                    }
-                });
-
-
-
-
-
-            }
-*/
-
-        /*
-
-        Intent intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
-        intent.putExtra("id", id);
-        intent.putExtra("photo", photo);
-        intent.putExtra("name", name);
-        intent.putExtra("address", address);
-        intent.putExtra("phone", phone);
-        intent.putExtra("website", website);
-        intent.putExtra("like", like);
-        intent.putExtra("selected", selected);
-        startActivity(intent);*/
-    }
-
-    String restaurantId;
-    Intent intent;
-    boolean openIntent;
+    private Intent intent;
+    private boolean openIntent;
     Place selectedPlace;
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-
-
-        if (id == R.id.nav_selection) {
-
-          // WorkmateViewModel wmViewModel;
-           //wmViewModel = ViewModelProviders.of(this).get("WorkmateViewModel", WorkmateViewModel.class);
-         //  rViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
-           viewModel.getWorkmate(mFirebaseUser.getUid()).observe(this, workmate ->
-           {
-
-               if (workmate.restaurantId != null)
-                   OpenRestaurantDetailsActivity(workmate.restaurantId);
-                   /*rViewModel.getPlace(workmate.restaurantId).observe(this, place ->
-                {
-
-                   selectedPlace = place;
-
-                    if (selectedPlace != null && openIntent == false) {
-                        intent = new Intent(getApplication(), RestaurantDetailsActivity.class);
-                        intent.putExtra("id", selectedPlace.placeId);
-                        intent.putExtra("photo", selectedPlace.thumb);
-                        intent.putExtra("name", selectedPlace.name());
-                        intent.putExtra("address", selectedPlace.address());
-                        intent.putExtra("phone", selectedPlace.phone());
-                        intent.putExtra("website", selectedPlace.website());
-                        intent.putExtra("like", selectedPlace.like);
-                        intent.putExtra("selected", selectedPlace.selected);
-                        openIntent = true;
-                        startActivity(intent);
-
-                    }
-
-               });*/
-
-           });
-        }
-        if (id == R.id.nav_settings) {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-            // Handle the camera action
-        }
-        if (id == R.id.nav_sign_out) {
-            // Handle the camera action
-            mFirebaseAuth.signOut();
-            LoginManager.getInstance().logOut();
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-            mUsername = ANONYMOUS;
-            startActivity(new Intent(this, SignInActivity.class));
-            finish();
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        selectedPlace = null;
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     private void OpenRestaurantDetailsActivity(String id)
     {
         openIntent = false;
-        //if (rViewModel == null)
-
-        rViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
-        if (id != null) {
-            //selectedPlace = null;
-            rViewModel.getPlace(id).observe(this, place ->
+        restaurantViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
+        if (id != null)
+        {
+            restaurantViewModel.loadPlace(id);
+            restaurantViewModel.getPlace().observe(this, place ->
             {
-                if (place != selectedPlace && openIntent == false) {
+                if (place != selectedPlace && openIntent == false)
+                {
                     selectedPlace = place;
                     intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
                     intent.putExtra("id", place.placeId);
@@ -414,13 +254,110 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                     intent.putExtra("website", place.website());
                     intent.putExtra("like", place.like);
                     intent.putExtra("selected", place.selected);
-openIntent = true;
+                    openIntent = true;
                     startActivity(intent);
-                    //}
                 }
             });
-
         }
+    }
+    // Creates the options menu for action bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    // Handles action bar item clicks
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.search_item:
+                int AUTOCOMPLETE_REQUEST_CODE = 1;
+
+// Set the fields to specify which types of place data to
+// return after the user has made a selection.
+                List<com.google.android.libraries.places.api.model.Place.Field> fields = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ID, com.google.android.libraries.places.api.model.Place.Field.NAME);
+
+// Start the autocomplete intent.
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.OVERLAY, fields)
+                        .build(MainActivity.this);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    // Handle navigation view item clicks
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+        if (id == R.id.nav_selection)
+        {
+            workmateViewModel.getWorkmate(user.getUid()).observe(this, workmate ->
+            {
+                if (workmate.restaurantId != null)
+                    OpenRestaurantDetailsActivity(workmate.restaurantId);
+            });
+        }
+        if (id == R.id.nav_settings)
+        {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        }
+        if (id == R.id.nav_sign_out)
+        {
+            FirebaseAuth.getInstance().signOut();
+            LoginManager.getInstance().logOut();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            userName = ANONYMOUS;
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    // Set selected place to null and close drawer if it is open on back button press
+    @Override
+    public void onBackPressed()
+    {
+        selectedPlace = null;
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START))
+        {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+    }
+    // Open restaurant details activity based on id in parameter on item click
+    @Override
+    public void onItemClicked(String id)
+    {
+        OpenRestaurantDetailsActivity(id);
+    }
+    //
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+    // Return activity layout
+    @Override
+    protected int layoutRes() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public void onPlaceSelected(@NonNull com.google.android.libraries.places.api.model.Place place) {
+
+    }
+
+    @Override
+    public void onError(@NonNull Status status) {
+
     }
 }
 

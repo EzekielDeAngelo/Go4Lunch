@@ -1,6 +1,4 @@
 package antho.com.go4lunch.model.workmate;
-
-
 import com.google.auto.value.AutoValue;
 import com.google.firebase.database.Exclude;
 
@@ -9,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.Nullable;
-
+/** Data model for workmate object **/
 @AutoValue
-public /*abstract*/ class Workmate
+public class Workmate
 {
-    public /*abstract*/ String name;
-    public /*abstract*/ String id;
+    public String name;
+    public String id;
     public String restaurantId;
     public List<String> likedRestaurants;
 

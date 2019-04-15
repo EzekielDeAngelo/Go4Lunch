@@ -1,5 +1,4 @@
 package antho.com.go4lunch.base;
-/** Base fragment**/
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
