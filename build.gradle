@@ -29,6 +29,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
         ext{
+            archVersion = '2.0.1'
             butterKnifeVersion = '10.1.0'
             supportVersion = '28.0.0'
             constraintVersion = "1.1.3"

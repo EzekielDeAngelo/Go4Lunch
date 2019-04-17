@@ -20,6 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import antho.com.go4lunch.model.restaurant.places.Place;
 import antho.com.go4lunch.model.workmate.Workmate;
 import durdinapps.rxfirebase2.DataSnapshotMapper;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
@@ -50,6 +52,8 @@ public class WorkmateViewModel extends ViewModel
         if (mFirebaseUser != null)
         loadWorkmate(mFirebaseUser.getUid());
     }
+    // Return MutableLiveData for testing purpose
+    public MutableLiveData<List<Workmate>> getMutableLiveData() { return workmates; }
     //
     public LiveData<List<Workmate>> getWorkmates() {
         return workmates; }

@@ -58,6 +58,8 @@ public class RestaurantViewModel extends ViewModel
         mLocation = location;
         loadRestaurants(mLocation);
     }
+    // Return MutableLiveData for testing purpose
+    public MutableLiveData<List<Place>> getMutableLiveData() { return places; }
     // Return places from google places API
     public LiveData<List<Place>> getPlaces() { return places; }
     // Return a place from google places API based on id

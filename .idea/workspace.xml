@@ -12,7 +12,7 @@
   </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/activities/RestaurantDetailsActivity.java" line="53" />
-    <bookmark url="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java" line="120" />
+    <bookmark url="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java" line="124" />
   </component>
   <component name="CMakeSettings">
     <configurations>
@@ -21,17 +21,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc3054ae-657a-438e-be18-83689b415e9b" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/values-fr/strings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_annotation_annotation_1_0_2_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_common_2_0_1_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_runtime_2_0_1_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_arch_core_core_testing_2_0_1_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_jraska_livedata_testing_1_1_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_assertj_assertj_core_2_9_1_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_mockito_mockito_core_2_19_0_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_objenesis_objenesis_2_6_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/RestaurantViewModelTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/TestUtility.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/WorkmatesViewModelTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/RestaurantViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/RestaurantViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/ExampleUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -90,8 +106,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1190">
-              <caret line="70" column="123" selection-start-line="70" selection-start-column="123" selection-end-line="70" selection-end-column="123" />
+            <state relative-caret-position="420">
+              <caret line="55" column="40" selection-start-line="55" selection-start-column="40" selection-end-line="55" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -99,79 +115,92 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1222">
+              <caret line="93" column="69" selection-start-line="93" selection-start-column="69" selection-end-line="93" selection-end-column="69" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="272">
-              <caret line="16" column="9" selection-start-line="15" selection-start-column="20" selection-end-line="16" selection-end-column="9" />
+              <caret line="31" column="33" selection-start-line="31" selection-start-column="33" selection-end-line="31" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_restaurant_details.xml">
-          <provider editor-type-id="android-designer2" />
+        <entry file="file://$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/RestaurantViewModelTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="471">
-              <caret line="97" column="32" selection-start-line="97" selection-start-column="32" selection-end-line="97" selection-end-column="32" />
+            <state relative-caret-position="491">
+              <caret line="50" column="5" lean-forward="true" selection-start-line="30" selection-start-column="3" selection-end-line="50" selection-end-column="5" />
               <folding>
-                <element signature="e#4092#4109#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#782#783#0" expanded="true" />
+                <element signature="e#856#857#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/activities/adapter/RestaurantDetailsAdapter.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/RestaurantViewModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="79" column="65" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="65" />
-              <folding>
-                <element signature="e#2701#2702#0" expanded="true" />
-                <element signature="e#2779#2780#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="85">
+              <caret line="54" selection-start-line="54" selection-end-line="54" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/fragments/adapter/WorkmatesAdapter.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/factory/ViewModelFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="87" column="16" selection-start-line="87" selection-start-column="16" selection-end-line="87" selection-end-column="16" />
-              <folding>
-                <element signature="e#907#908#0" expanded="true" />
-                <element signature="e#947#948#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/fragments/adapter/RestaurantsAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="90" column="37" selection-start-line="90" selection-start-column="37" selection-end-line="90" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" column="1" selection-start-line="1" selection-start-column="1" selection-end-line="41" />
+            <state relative-caret-position="255">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values-fr/strings.xml">
+        <entry file="file://$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/WorkmatesViewModelTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
-              <caret line="39" column="12" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="12" />
+            <state relative-caret-position="763">
+              <caret line="51" column="5" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/TestUtility.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="518">
+              <caret line="61" selection-start-line="61" selection-end-line="61" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#578#579#0" expanded="true" />
+                <element signature="e#629#630#0" expanded="true" />
+                <element signature="e#698#699#0" expanded="true" />
+                <element signature="e#749#750#0" expanded="true" />
+                <element signature="e#818#819#0" expanded="true" />
+                <element signature="e#869#870#0" expanded="true" />
+                <element signature="e#936#937#0" expanded="true" />
+                <element signature="e#987#988#0" expanded="true" />
+                <element signature="e#1066#1067#0" expanded="true" />
+                <element signature="e#1117#1118#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/model/workmate/Workmate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -179,10 +208,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
+            <state relative-caret-position="884">
               <caret line="99" column="5" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#5631#5662#0" expanded="true" />
+                <element signature="e#5664#5696#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -197,8 +228,8 @@
         <option value="Interface" />
         <option value="resourceFile" />
         <option value="layoutResourceFile_vertical" />
-        <option value="Class" />
         <option value="valueResourceFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -242,10 +273,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/activities/SearchActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/activities/SettingsActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_settings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_restaurant_details.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/recyclerview_layout.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/base/BaseActivity.java" />
@@ -266,7 +293,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/factory/ViewModelFactory.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/model/restaurant/places/PlaceAddress.java" />
         <option value="$PROJECT_DIR$/app/build/generated/source/apt/debug/antho/com/go4lunch/model/restaurant/places/AutoValue_PlaceAddress.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/helpers/AppExecutors.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/helpers/Utilities.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/helpers/OnLocationUpdateListener.java" />
@@ -287,12 +313,17 @@
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/base/AppDatabase.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/fragments/MapsFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/activities/RestaurantDetailsActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/RestaurantViewModel.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/values-fr/strings.xml" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/RestaurantViewModel.java" />
+        <option value="$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/MapViewModelTest.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java" />
+        <option value="$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/TestUtility.java" />
+        <option value="$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/RestaurantViewModelTest.java" />
+        <option value="$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/WorkmatesViewModelTest.java" />
       </list>
     </option>
   </component>
@@ -401,20 +432,56 @@
             <path>
               <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
             </path>
             <path>
               <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="go4lunch" type="cbb59c9e:AndroidPsiDirectoryNode" />
             </path>
             <path>
               <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="res" type="d4f16f75:AndroidResFolderNode" />
-              <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
-              <item name="strings" type="c431d0b8:AndroidResGroupNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="go4lunch" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="go4lunch" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="restaurant" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="go4lunch" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="workmate" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="go4lunch" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="go4lunch" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="viewmodel" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="go4lunch" type="cbb59c9e:AndroidPsiDirectoryNode" />
             </path>
             <path>
               <item name="Go4Lunch" type="1abcf292:AndroidViewProjectNode" />
@@ -468,10 +535,59 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Android App.app">
+  <component name="RunManager" selected="Android JUnit.RestaurantViewModelTest.directAssertion">
     <configuration name="&lt;template&gt;" type="JUnit" default="true" selected="false">
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+    </configuration>
+    <configuration name="RestaurantViewModelTest" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="antho.com.go4lunch.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="antho.com.go4lunch" />
+      <option name="MAIN_CLASS_NAME" value="antho.com.go4lunch.RestaurantViewModelTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RestaurantViewModelTest.directAssertion" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="antho.com.go4lunch.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="antho.com.go4lunch" />
+      <option name="MAIN_CLASS_NAME" value="antho.com.go4lunch.RestaurantViewModelTest" />
+      <option name="METHOD_NAME" value="directAssertion" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WorkmatesViewModelTest" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="antho.com.go4lunch.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="antho.com.go4lunch" />
+      <option name="MAIN_CLASS_NAME" value="antho.com.go4lunch.WorkmatesViewModelTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
     </configuration>
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <option name="TEST_OBJECT" value="class" />
@@ -569,9 +685,15 @@
     <list>
       <item itemvalue="Android App.app" />
       <item itemvalue="Gradle.Go4Lunch [signingReport]" />
+      <item itemvalue="Android JUnit.WorkmatesViewModelTest" />
+      <item itemvalue="Android JUnit.RestaurantViewModelTest" />
+      <item itemvalue="Android JUnit.RestaurantViewModelTest.directAssertion" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Android JUnit.RestaurantViewModelTest.directAssertion" />
+        <item itemvalue="Android JUnit.RestaurantViewModelTest" />
+        <item itemvalue="Android JUnit.WorkmatesViewModelTest" />
         <item itemvalue="Gradle.Go4Lunch [signingReport]" />
       </list>
     </recent_temporary>
@@ -588,6 +710,32 @@
       <updated>1544715154587</updated>
     </task>
     <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="WorkmatesViewModelTest - 2019.04.18 at 01h 40m 41s.xml">
+      <configuration name="WorkmatesViewModelTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="WorkmatesViewModelTest - 2019.04.18 at 01h 40m 55s.xml">
+      <configuration name="WorkmatesViewModelTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="RestaurantViewModelTest - 2019.04.18 at 01h 41m 21s.xml">
+      <configuration name="RestaurantViewModelTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="RestaurantViewModelTest - 2019.04.18 at 01h 42m 14s.xml">
+      <configuration name="RestaurantViewModelTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="RestaurantViewModelTest - 2019.04.18 at 01h 42m 33s.xml">
+      <configuration name="RestaurantViewModelTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="RestaurantViewModelTest - 2019.04.18 at 01h 46m 19s.xml">
+      <configuration name="RestaurantViewModelTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="RestaurantViewModelTest - 2019.04.18 at 01h 48m 57s.xml">
+      <configuration name="RestaurantViewModelTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="RestaurantViewModelTest_directAssertion - 2019.04.18 at 01h 49m 34s.xml">
+      <configuration name="RestaurantViewModelTest.directAssertion" configurationId="AndroidJUnit" />
+    </history-entry>
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -612,17 +760,17 @@
       <window_info id="Captures" order="7" side_tool="true" weight="0.24972437" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.44597575" weight="0.3243243" />
-      <window_info anchor="bottom" id="Debug" order="2" sideWeight="0.49724367" weight="0.3991684" />
+      <window_info anchor="bottom" id="Debug" order="2" sideWeight="0.4966924" weight="0.39875388" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
-      <window_info anchor="bottom" id="Run" order="5" sideWeight="0.61080486" weight="0.33471933" />
+      <window_info anchor="bottom" id="Run" order="5" sideWeight="0.6102536" visible="true" weight="0.33437175" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49889746" weight="0.32952183" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.33351707" side_tool="true" weight="0.32744282" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5033076" side_tool="true" weight="0.39875388" />
       <window_info anchor="bottom" id="Android Profiler" order="8" weight="0.32952183" />
       <window_info anchor="bottom" id="Logcat" order="9" sideWeight="0.4140022" weight="0.32952183" />
-      <window_info anchor="bottom" id="Build" order="10" sideWeight="0.6664829" visible="true" weight="0.32398754" />
+      <window_info anchor="bottom" id="Build" order="10" sideWeight="0.6664829" weight="0.32398754" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32985386" />
-      <window_info anchor="bottom" id="Inspection Results" order="12" sideWeight="0.49944875" visible="true" weight="0.32985386" />
+      <window_info anchor="bottom" id="Inspection Results" order="12" sideWeight="0.49944875" weight="0.32985386" />
       <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.49944875" weight="0.32985386" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -637,6 +785,16 @@
     </layout>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/RestaurantViewModel.java</url>
+          <line>53</line>
+          <properties class="antho.com.go4lunch.viewmodel.RestaurantViewModel" method="&lt;init&gt;" />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="app">
         <watch expression="dataSnapshot" />
@@ -644,56 +802,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="43" column="33" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/menu_drawer.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="34" selection-start-line="15" selection-start-column="34" selection-end-line="15" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/navigation.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/navigation_view.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="29" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/nav_header_main.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="47" selection-start-line="47" selection-end-line="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/fragments/adapter/RestaurantsAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="90" column="37" selection-start-line="90" selection-start-column="37" selection-end-line="90" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/view/fragments/adapter/WorkmatesDiffCallback.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -916,13 +1024,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/factory/ViewModelFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-firebase-database-16.0.5.aar/f11209b1423005f1b8f7a682c0da6b46/jars/classes.jar!/com/google/firebase/database/core/ValueEventRegistration.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
@@ -940,42 +1041,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/RestaurantViewModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="200" selection-start-line="200" selection-end-line="200" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1190">
-          <caret line="70" column="123" selection-start-line="70" selection-start-column="123" selection-end-line="70" selection-end-column="123" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml">
       <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="9" selection-start-line="15" selection-start-column="20" selection-end-line="16" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="99" column="5" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -998,6 +1068,116 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="460">
           <caret line="39" column="12" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_restaurant_details.xml">
+      <provider editor-type-id="android-designer2" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="97" column="32" selection-start-line="97" selection-start-column="32" selection-end-line="97" selection-end-column="32" />
+          <folding>
+            <element signature="e#4092#4109#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="31" column="33" selection-start-line="31" selection-start-column="33" selection-end-line="31" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1222">
+          <caret line="93" column="69" selection-start-line="93" selection-start-column="69" selection-end-line="93" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="884">
+          <caret line="99" column="5" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5631#5662#0" expanded="true" />
+            <element signature="e#5664#5696#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/model/workmate/Workmate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/TestUtility.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="518">
+          <caret line="61" selection-start-line="61" selection-end-line="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#578#579#0" expanded="true" />
+            <element signature="e#629#630#0" expanded="true" />
+            <element signature="e#698#699#0" expanded="true" />
+            <element signature="e#749#750#0" expanded="true" />
+            <element signature="e#818#819#0" expanded="true" />
+            <element signature="e#869#870#0" expanded="true" />
+            <element signature="e#936#937#0" expanded="true" />
+            <element signature="e#987#988#0" expanded="true" />
+            <element signature="e#1066#1067#0" expanded="true" />
+            <element signature="e#1117#1118#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/WorkmateViewModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="55" column="40" selection-start-line="55" selection-start-column="40" selection-end-line="55" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/RestaurantViewModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/antho/com/go4lunch/viewmodel/factory/ViewModelFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/RestaurantViewModelTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="491">
+          <caret line="50" column="5" lean-forward="true" selection-start-line="30" selection-start-column="3" selection-end-line="50" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#782#783#0" expanded="true" />
+            <element signature="e#856#857#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/test/java/antho/com/go4lunch/WorkmatesViewModelTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="763">
+          <caret line="51" column="5" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
