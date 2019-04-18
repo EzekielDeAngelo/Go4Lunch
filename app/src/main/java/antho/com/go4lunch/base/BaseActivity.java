@@ -6,16 +6,16 @@ import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
+
+import java.util.Objects;
+
 import antho.com.go4lunch.R;
 import butterknife.ButterKnife;
 /** Implements base methods for all activities **/
 public abstract class BaseActivity  extends AppCompatActivity
 {
-    Toolbar toolbar;
     // Set layout and support action bar
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -29,11 +29,11 @@ public abstract class BaseActivity  extends AppCompatActivity
     // Configure toolbar and set it as app action bar
     private void configureToolbar()
     {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null)
         {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         }
     }
 

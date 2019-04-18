@@ -1,12 +1,8 @@
 package antho.com.go4lunch.view.activities;
-/** **/
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -21,15 +17,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Objects;
+
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.view.activities.adapter.RestaurantDetailsAdapter;
 import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import antho.com.go4lunch.viewmodel.WorkmateViewModel;
-import antho.com.go4lunch.viewmodel.factory.ViewModelFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.provider.SettingsSlicesContract.KEY_LOCATION;
 
 /** **/
 public class RestaurantDetailsActivity extends AppCompatActivity
@@ -70,41 +66,36 @@ public class RestaurantDetailsActivity extends AppCompatActivity
         restaurantViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
         //restaurantViewModel = ViewModelProviders.of(this, new ViewModelFactory(getIntent().getStringExtra("location"))).get("RestaurantViewModel", RestaurantViewModel.class);
         select.setChecked(getIntent().getBooleanExtra("selected", false));
-        select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+        select.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
             {
-                if (isChecked)
+                restaurantViewModel.selectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
+
+                viewModel.selectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
+                /*viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
                 {
-                    restaurantViewModel.selectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
+                    workmate.restaurantId = getIntent().getStringExtra("name");
+                });*/
 
-                    viewModel.selectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                    /*viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
-                    {
-                        workmate.restaurantId = getIntent().getStringExtra("name");
-                    });*/
-
-                    /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
-                    {
-                        place.selectedBy.add(mFirebaseUser.getUid());
-
-                        Log.d("onSelectCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.selected)));
-                    });*/
-                }
-                else
+                /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
                 {
-                    restaurantViewModel.deselectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                    viewModel.deselectPlace(mFirebaseUser, getIntent().getStringExtra("name"));
-         /*           viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
-                    {
-                    });*/
+                    place.selectedBy.add(mFirebaseUser.getUid());
 
-                   /* restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
-                    {
-                        place.selectedBy.remove(mFirebaseUser.getUid());
-                    });*/
-                }
+                    Log.d("onSelectCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.selected)));
+                });*/
+            }
+            else
+            {
+                restaurantViewModel.deselectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
+                viewModel.deselectPlace(mFirebaseUser);
+     /*           viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
+                {
+                });*/
+
+               /* restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
+                {
+                    place.selectedBy.remove(mFirebaseUser.getUid());
+                });*/
             }
         });
         call.setOnClickListener(workmates ->
@@ -121,33 +112,30 @@ public class RestaurantDetailsActivity extends AppCompatActivity
         });
 
         like.setChecked(getIntent().getBooleanExtra("like", false));
-        like.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
+        like.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+            {
+                restaurantViewModel.likePlace(mFirebaseUser, getIntent().getStringExtra("id"));
+                /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
                 {
-                    restaurantViewModel.likePlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                    /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
-                    {
-                        place.likedBy.add(mFirebaseUser.getUid());
-                        Log.d("onLikedCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.like)));
-                    });*/
-                }
-                else
+                    place.likedBy.add(mFirebaseUser.getUid());
+                    Log.d("onLikedCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.like)));
+                });*/
+            }
+            else
+            {
+                restaurantViewModel.dislikePlace(mFirebaseUser, getIntent().getStringExtra("id"));
+                /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
                 {
-                    restaurantViewModel.dislikePlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                    /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
-                    {
-                        place.likedBy.remove(mFirebaseUser.getUid());
-                        Log.d("onLikedCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.like)));
-                    });*/
-                }
+                    place.likedBy.remove(mFirebaseUser.getUid());
+                    Log.d("onLikedCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.like)));
+                });*/
             }
         });
         observeViewModel();
     }
 
-    public void observeViewModel()
+    private void observeViewModel()
     {
 
         viewModel.getWorkmates().observe(this, workmates ->
@@ -155,7 +143,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity
 
             recyclerView.setAdapter(new RestaurantDetailsAdapter());
             RestaurantDetailsAdapter adapter = (RestaurantDetailsAdapter) recyclerView.getAdapter();
-            adapter.setData(workmates, getIntent().getStringExtra("id"));
+            Objects.requireNonNull(adapter).setData(workmates, getIntent().getStringExtra("id"));
         });
     }
 }

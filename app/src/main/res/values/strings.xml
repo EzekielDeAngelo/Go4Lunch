@@ -7,7 +7,6 @@
     <string name="sign_in">Logo</string>
 
     <string name="facebook_app_id">224572028439433</string>
-    <string name="fb_login_protocol_scheme">fb224572028439433</string>
     <string name="facebook_sign_in">SIGN IN WITH FACEBOOK</string>
     <string name="google_sign_in">SIGN IN WITH GOOGLE</string>
     <string name="twitter_sign_in">SIGN IN WITH TWITTER</string>
@@ -15,21 +14,8 @@
     <string name="twitter_consumer_secret">xZH482a6O7C62fL28fueVpHfYIFMGVIGMxSFn2fHVUbIrOg82O</string>
     <string name="search">Search</string>
     <string name="settings">Settings</string>
-    <string name="welcome_msg">Welcome!</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="contacts_permission_rationale">Access to account information is required to sign in.</string>
-    <string name="invite_menu_label">Invite</string>
-    <string name="invitation_message">Please join me for a friendly chat</string>
-    <string name="invitation_cta">Call to action</string>
-    <string name="invitation_title">Friendly Chat Invite</string>
-
-    <string name="sign_up">Sign Up</string>
-    <string name="fresh_config">Fresh Config</string>
-    <string name="cause_crash">Cause Crash</string>
-    <string name="title_activity_maps">Map</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
     <!-- Navigation drawer -->
@@ -38,6 +24,10 @@
     <string name="navigation_drawer_selection">My lunch</string>
     <string name="navigation_drawer_settings">Settings</string>
     <string name="navigation_drawer_sign_out">Sign out</string>
+    <string name="todo">TODO</string>
+    <string name="call">CALL</string>
+    <string name="website">WEBSITE</string>
+    <string name="like">LIKE</string>
 
 
 </resources>

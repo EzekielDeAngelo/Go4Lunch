@@ -9,9 +9,9 @@
         android:layout_weight="0.4"
         android:orientation="vertical"
         android:background="@color/primary">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -21,7 +21,8 @@
                     android:id="@+id/photo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/todo" />
 
             </LinearLayout>
             <ToggleButton
@@ -31,8 +32,8 @@
                 style="@style/selectToggleButton"
                 android:button="@drawable/toggle_select_background"
                 android:background="@android:color/transparent"
-                android:layout_gravity="bottom|right"
-                android:layout_marginRight="25dp"/>
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="25dp"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -40,8 +41,9 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="24dp"
               />
-        </FrameLayout>
+</FrameLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -65,8 +67,7 @@
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/facebook_font"
-                android:layout_below="@+id/name"/>
+                android:textColor="@color/facebook_font" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/button"
-                android:text="CALL"
+                android:text="@string/call"
                 android:layout_weight="1"
 
                 android:drawableTop="@drawable/ic_button_phone"/>
@@ -86,7 +87,7 @@
                 android:id="@+id/like"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="LIKE"
+                android:text="@string/like"
                 android:layout_weight="1"
                 style="@style/likeToggleButton"
                 android:drawableTop="@drawable/toggle_like"/>
@@ -94,7 +95,7 @@
                 android:id="@+id/website"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="WEBSITE"
+                android:text="@string/website"
                 android:layout_weight="1"
                 style="@style/button"
                 android:drawableTop="@drawable/ic_button_website"/>
@@ -105,7 +106,6 @@
 
             >
             <androidx.recyclerview.widget.RecyclerView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/restaurant_details_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

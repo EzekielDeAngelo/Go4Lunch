@@ -1,11 +1,10 @@
 package antho.com.go4lunch.viewmodel.factory;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 
-import androidx.lifecycle.ViewModelStore;
-import androidx.lifecycle.ViewModelStoreOwner;
 import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 /** Generates viewmodel with a string parameter **/
 public class ViewModelFactory implements ViewModelProvider.Factory
@@ -17,8 +16,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory
         if (location != null) mLocation = location;
     }
     // Return viewmodel with given string as a parameter
+    @NonNull
     @Override
-    public <T extends ViewModel> T create(Class<T> modelClass)
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass)
     {
         return (T) new RestaurantViewModel(mLocation);
     }

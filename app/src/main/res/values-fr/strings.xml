@@ -8,7 +8,6 @@
     <string name="sign_in">Logo</string>
 
     <string name="facebook_app_id">224572028439433</string>
-    <string name="fb_login_protocol_scheme">fb224572028439433</string>
     <string name="facebook_sign_in">SE CONNECTER AVEC FACEBOOK</string>
     <string name="google_sign_in">SE CONNECTER AVEC GOOGLE</string>
     <string name="twitter_sign_in">SE CONNECTER AVEC TWITTER</string>
@@ -16,17 +15,8 @@
     <string name="twitter_consumer_secret">xZH482a6O7C62fL28fueVpHfYIFMGVIGMxSFn2fHVUbIrOg82O</string>
     <string name="search">Rechercher</string>
     <string name="settings">Options</string>
-    <string name="welcome_msg">Bienvenue !</string>
-    <string name="sign_out">Se déconnecter</string>
-    <string name="contacts_permission_rationale">Les informations de connexion sont nécessaires pour vous connecter</string>
-
-    <string name="sign_up">Se connecter</string>
-    <string name="fresh_config">Fresh Config</string>
-    <string name="cause_crash">Cause Crash</string>
-    <string name="title_activity_maps">Map</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
     <!-- Navigation drawer -->
@@ -35,6 +25,9 @@
     <string name="navigation_drawer_selection">Mon repas</string>
     <string name="navigation_drawer_settings">Options</string>
     <string name="navigation_drawer_sign_out">Se déconnecter</string>
-
+    <string name="call">APPELER</string>
+    <string name="website">WEBSITE</string>
+    <string name="like">LIKE</string>
+    <string name="todo">A FAIRE</string>
 
 </resources>

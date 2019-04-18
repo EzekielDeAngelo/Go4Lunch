@@ -1,13 +1,9 @@
 package antho.com.go4lunch;
 
-import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import antho.com.go4lunch.model.restaurant.Restaurant;
-import antho.com.go4lunch.model.restaurant.RestaurantGeometry;
 import antho.com.go4lunch.model.restaurant.places.Place;
 import antho.com.go4lunch.model.restaurant.places.PlacePhotos;
 import antho.com.go4lunch.model.workmate.Workmate;
@@ -25,22 +21,22 @@ class TestUtility
 
                 @Override
                 public String name() {
-                    return null;
+                    return generateRandomString();
                 }
 
                 @Override
                 public String address() {
-                    return null;
+                    return generateRandomString();
                 }
 
                 @Override
                 public String website() {
-                    return null;
+                    return generateRandomString();
                 }
 
                 @Override
                 public String phone() {
-                    return null;
+                    return generateRandomString();
                 }
 
                 @Override

@@ -1,6 +1,7 @@
 package antho.com.go4lunch.view.fragments;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -13,6 +14,9 @@ import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import butterknife.BindView;
 
 import android.view.View;
+
+import java.util.Objects;
+
 /** Creates fragment to display restaurants list **/
 public class RestaurantsFragment extends BaseFragment
 {
@@ -23,10 +27,10 @@ public class RestaurantsFragment extends BaseFragment
     // Return new instance of restaurant fragment
     public static RestaurantsFragment newInstance() { return new RestaurantsFragment(); }
     // Set viewmodel for restaurants fragment
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(getActivity()).get("RestaurantViewModel", RestaurantViewModel.class);
+        viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get("RestaurantViewModel", RestaurantViewModel.class);
         restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         observeViewModel();
     }/*
@@ -37,13 +41,13 @@ public class RestaurantsFragment extends BaseFragment
         adapter.notifyDataSetChanged();
     }*/
     // Observe viewmodel to update restaurant recycler view
-    public void observeViewModel()
+    private void observeViewModel()
     {
         viewModel.getPlaces().observe(this, places ->
         {
             restaurantRecyclerView.setAdapter(new RestaurantsAdapter(((RestaurantsAdapter.OnRestaurantClickedListener) getActivity())));
             RestaurantsAdapter adapter = (RestaurantsAdapter) restaurantRecyclerView.getAdapter();
-            adapter.setData(places);
+            Objects.requireNonNull(adapter).setData(places);
         });
     }
     // Return fragment layout

@@ -1,6 +1,7 @@
 package antho.com.go4lunch.view.fragments;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +14,9 @@ import antho.com.go4lunch.viewmodel.WorkmateViewModel;
 import butterknife.BindView;
 
 import android.view.View;
+
+import java.util.Objects;
+
 /** Creates fragment to display workmates list **/
 public class WorkmatesFragment extends BaseFragment
 {
@@ -25,21 +29,21 @@ public class WorkmatesFragment extends BaseFragment
         return new WorkmatesFragment();
     }
     // Set viewmodel for workmates fragment
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(getActivity()).get("WorkmateViewModel", WorkmateViewModel.class);
+        viewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get("WorkmateViewModel", WorkmateViewModel.class);
         workmatesRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         observeViewModel();
     }
     // Observe viewmodel to update restaurant recycler view
-    public void observeViewModel()
+    private void observeViewModel()
     {
-        viewModel.getWorkmates().observe(getActivity(), workmates ->
+        viewModel.getWorkmates().observe(Objects.requireNonNull(getActivity()), workmates ->
         {
             workmatesRecyclerView.setAdapter(new WorkmatesAdapter(((WorkmatesAdapter.OnWorkmateClickedListener) getActivity())));
             WorkmatesAdapter adapter = (WorkmatesAdapter) workmatesRecyclerView.getAdapter();
-            adapter.setData(workmates);
+            Objects.requireNonNull(adapter).setData(workmates);
         });
     }
     // Return fragment layout

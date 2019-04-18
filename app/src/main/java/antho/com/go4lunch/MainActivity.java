@@ -14,7 +14,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -59,17 +58,11 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private GoogleApiClient mGoogleApiClient;
     private FragmentManager fragmentManager;
     private WorkmateViewModel workmateViewModel;
-    private RestaurantViewModel restaurantViewModel;
-
-    private View navHeader;
-    private TextView userTextView;
-    private ImageView userImageView;
 
     private FirebaseUser user;
     private String userName;
-    private String photoUrl;
 
-    public static final String ANONYMOUS = "anonymous";
+    private static final String ANONYMOUS = "anonymous";
     private static final String SELECTED_INDEX_KEY = "selected_index";
     private static final String MAP_VIEW_TAG = "MAP_VIEW_TAG";
     private static final String LIST_VIEW_TAG = "LIST_VIEW_TAG";
@@ -84,7 +77,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         ButterKnife.bind(this);
         Places.initialize(getApplicationContext(),"AIzaSyAuGzug9RNw6hQZvzetYY-VB5is8OLeS7w");
         // Create a new Places client instance.
-        PlacesClient placesClient = Places.createClient(this);
+
         workmateViewModel = ViewModelProviders.of(this).get(WorkmateViewModel.class);
         initFirebaseAuth();
 
@@ -113,14 +106,13 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             if (user != null)
                 workmateViewModel.writeNewUser(FirebaseAuth.getInstance().getCurrentUser());
             finish();
-            return;
         }
         else
         {
             userName = user.getDisplayName();
             if (user.getPhotoUrl() != null)
             {
-                photoUrl = user.getPhotoUrl().toString();
+                String photoUrl = user.getPhotoUrl().toString();
             }
             setUpNavigationDrawer();
         }
@@ -132,12 +124,12 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navHeader = navigationView.getHeaderView(0);
-        userTextView = (TextView) navHeader.findViewById(R.id.username);
+        View navHeader = navigationView.getHeaderView(0);
+        TextView userTextView = navHeader.findViewById(R.id.username);
         userTextView.setText(user.getDisplayName());
-        userImageView = (ImageView) navHeader.findViewById(R.id.img_profile);
+        ImageView userImageView = navHeader.findViewById(R.id.img_profile);
     }
     // Loads fragment based on index given as parameter
     private void loadFirstFragment(int selectedIndex)
@@ -208,7 +200,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         });
     }
     // Load and unload fragments when they are changed
-    public void changeFragment(Fragment fragment, String tagFragmentName)
+    private void changeFragment(Fragment fragment, String tagFragmentName)
     {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment currentFragment = fragmentManager.getPrimaryNavigationFragment();
@@ -232,17 +224,17 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     //
     private Intent intent;
     private boolean openIntent;
-    Place selectedPlace;
+    private Place selectedPlace;
     private void OpenRestaurantDetailsActivity(String id)
     {
         openIntent = false;
-        restaurantViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
+        RestaurantViewModel restaurantViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
         if (id != null)
         {
             restaurantViewModel.loadPlace(id);
             restaurantViewModel.getPlace().observe(this, place ->
             {
-                if (place != selectedPlace && openIntent == false)
+                if (place != selectedPlace && !openIntent)
                 {
                     selectedPlace = place;
                     intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
@@ -271,28 +263,25 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
-        {
-            case R.id.search_item:
-                int AUTOCOMPLETE_REQUEST_CODE = 1;
+        if (item.getItemId() == R.id.search_item) {
+            int AUTOCOMPLETE_REQUEST_CODE = 1;
 
 // Set the fields to specify which types of place data to
 // return after the user has made a selection.
-                List<com.google.android.libraries.places.api.model.Place.Field> fields = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ID, com.google.android.libraries.places.api.model.Place.Field.NAME);
+            List<com.google.android.libraries.places.api.model.Place.Field> fields = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ID, com.google.android.libraries.places.api.model.Place.Field.NAME);
 
 // Start the autocomplete intent.
-                Intent intent = new Autocomplete.IntentBuilder(
-                        AutocompleteActivityMode.OVERLAY, fields)
-                        .build(MainActivity.this);
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            Intent intent = new Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.OVERLAY, fields)
+                    .build(MainActivity.this);
+            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
     // Handle navigation view item clicks
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
         int id = item.getItemId();
         if (id == R.id.nav_selection)
@@ -325,7 +314,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     public void onBackPressed()
     {
         selectedPlace = null;
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START))
         {
             drawer.closeDrawer(GravityCompat.START);

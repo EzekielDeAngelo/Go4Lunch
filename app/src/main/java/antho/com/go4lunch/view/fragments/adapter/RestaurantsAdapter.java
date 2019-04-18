@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.RestaurantViewHolder>
 {
     private final OnRestaurantClickedListener listener;
-    private List<Place> restaurants = new ArrayList<>();
+    private final List<Place> restaurants = new ArrayList<>();
     // Constructor
     public RestaurantsAdapter (OnRestaurantClickedListener listener)
     {

@@ -1,10 +1,11 @@
 package antho.com.go4lunch.view.fragments.adapter;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.recyclerview.widget.DiffUtil;
 import antho.com.go4lunch.model.workmate.Workmate;
 /** Overrides diffUtil methods to improve software performance **/
-public class WorkmatesDiffCallback extends DiffUtil.Callback
+class WorkmatesDiffCallback extends DiffUtil.Callback
 {
     private final List<Workmate> oldList;
     private final List<Workmate> newList;
@@ -30,7 +31,7 @@ public class WorkmatesDiffCallback extends DiffUtil.Callback
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition)
     {
-        return oldList.get(oldItemPosition).getId() == newList.get(newItemPosition).getId();
+        return Objects.equals(oldList.get(oldItemPosition).getId(), newList.get(newItemPosition).getId());
     }
     //
     @Override

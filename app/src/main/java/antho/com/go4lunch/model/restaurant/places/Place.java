@@ -30,7 +30,7 @@ public abstract class Place
     public List<String> selectedBy;
     public boolean selected;
     public boolean like;
-    public int stars;
+
     // Creates a Moshi adapter for this data model
     public static JsonAdapter<Place> jsonAdapter(Moshi moshi)
     {

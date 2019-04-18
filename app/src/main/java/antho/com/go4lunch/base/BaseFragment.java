@@ -34,5 +34,5 @@ public abstract class BaseFragment  extends Fragment
     }
     // Set a return value as a layout resource reference
     @LayoutRes
-    public abstract int layoutRes();
+    protected abstract int layoutRes();
 }

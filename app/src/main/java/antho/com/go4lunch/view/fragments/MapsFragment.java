@@ -45,18 +45,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.Objects;
+
 /** Creates fragment to display map from google API **/
 public class MapsFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener
 {
-    GoogleMap mMap;
-    SupportMapFragment mapFragment;
+    private GoogleMap mMap;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
     private final LatLng mDefaultLocation = new LatLng(45.730518, 4.983453);
-    private CameraPosition mCameraPosition;
-    private Location defaultLocation = new Location("");
+    private final Location defaultLocation = new Location("");
 
     private Place selectedPlace;
     private RestaurantViewModel restaurantViewModel;
@@ -66,7 +66,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     private static final String TAG = "LOCATION";
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
+
     // Required empty public constructor
     public MapsFragment() {}
     // Return new instance of map fragment
@@ -76,7 +76,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     }
     // Inflate the layout for this fragment and set up map
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         ButterKnife.bind(this, view);
@@ -85,7 +85,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         if (savedInstanceState != null)
         {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+
         }
         else
         {
@@ -93,16 +93,16 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
             defaultLocation.setLongitude(mDefaultLocation.longitude);
             mLastKnownLocation = defaultLocation;
         }
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment == null)
         {
             FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentTransaction fragmentTransaction = Objects.requireNonNull(fragmentManager).beginTransaction();
             mapFragment = SupportMapFragment.newInstance();
             fragmentTransaction.replace(R.id.map, mapFragment).commit();
         }
         mapFragment.getMapAsync(this);
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
         return view;
     }
     // Turn on my location layer, get the current location of the device and set info window click listener
@@ -116,7 +116,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         try
         {
             // Customise the styling of the base map using a JSON object defined in a raw resource file
-            boolean success = map.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.style_json));
+            boolean success = map.setMapStyle(MapStyleOptions.loadRawResourceStyle(Objects.requireNonNull(getContext()), R.raw.style_json));
             if (!success)
             {
                 Log.e(TAG, "Style parsing failed.");
@@ -132,29 +132,24 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     // Request location permission to get location of the device
     private void getLocationPermission()
     {
-        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
             mLocationPermissionGranted = true;
         }
         else
         {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
     // Handle the result of the location permission request
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
         mLocationPermissionGranted = false;
-        switch (requestCode)
-        {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
-            {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    mLocationPermissionGranted = true;
-                }
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
             }
         }
         updateLocationUI();
@@ -193,27 +188,22 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
             if (mLocationPermissionGranted)
             {
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnSuccessListener(getActivity(), new OnSuccessListener<Location>()
-                {
-                    @Override
-                    public void onSuccess(Location location)
+                locationResult.addOnSuccessListener(Objects.requireNonNull(getActivity()), (OnSuccessListener<Location>) location -> {
+                    if (location != null)
                     {
-                        if (location != null)
-                        {
-                            // Set the map's camera position to the current location of the device.
-                            mLastKnownLocation = location;
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                        }
-                        else
-                        {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                        }
-                        String parsedLocation = mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude();
-                        restaurantViewModel = ViewModelProviders.of(getActivity(), new ViewModelFactory(parsedLocation)).get("RestaurantViewModel", RestaurantViewModel.class);
-                        observeViewModel();
+                        // Set the map's camera position to the current location of the device.
+                        mLastKnownLocation = location;
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                     }
+                    else
+                    {
+                        Log.d(TAG, "Current location is null. Using defaults.");
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    }
+                    String parsedLocation = mLastKnownLocation.getLatitude() + "," + mLastKnownLocation.getLongitude();
+                    restaurantViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity()), new ViewModelFactory(parsedLocation)).get("RestaurantViewModel", RestaurantViewModel.class);
+                    observeViewModel();
                 });
             }
         }
@@ -226,7 +216,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     private void observeViewModel()
     {
 
-        restaurantViewModel.getPlaces().observe(getActivity(), places ->
+        restaurantViewModel.getPlaces().observe(Objects.requireNonNull(getActivity()), places ->
         {
             for (int i = 0; i < places.size(); i++)
             {
@@ -249,7 +239,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
             mMap.setOnMarkerClickListener(marker ->
             {
                 restaurantViewModel.loadPlace((String) marker.getTag());
-                restaurantViewModel.getPlace().observe(getActivity(), place ->
+                restaurantViewModel.getPlace().observe(Objects.requireNonNull(getActivity()), place ->
                 {
                     if (selectedPlace != place)
                         selectedPlace = place;
@@ -263,9 +253,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId)
     {
         Drawable background = ContextCompat.getDrawable(context, R.drawable.ic_marker_frame);
-        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        background.setBounds(0, 0, Objects.requireNonNull(background).getIntrinsicWidth(), background.getIntrinsicHeight());
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable.setBounds(0 +20, 0 +15, vectorDrawable.getIntrinsicWidth() -20, vectorDrawable.getIntrinsicHeight()-25);
+        vectorDrawable.setBounds(20, 15, Objects.requireNonNull(vectorDrawable).getIntrinsicWidth() -20, vectorDrawable.getIntrinsicHeight()-25);
         Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         background.draw(canvas);
@@ -291,7 +281,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     }
     // Save the map's camera position and the device location
     @Override
-    public void onSaveInstanceState(Bundle outState)
+    public void onSaveInstanceState(@NonNull Bundle outState)
     {
         if (mMap != null)
         {

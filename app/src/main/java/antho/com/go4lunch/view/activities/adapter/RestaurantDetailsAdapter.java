@@ -1,5 +1,4 @@
 package antho.com.go4lunch.view.activities.adapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,19 +7,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.model.workmate.Workmate;
-import antho.com.go4lunch.view.fragments.adapter.RestaurantsAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 /** Adapter to create and populate recycler view for restaurant details **/
 public class RestaurantDetailsAdapter extends RecyclerView.Adapter<RestaurantDetailsAdapter.RestaurantDetailsViewHolder>
 {
-    private List<Workmate> workmates = new ArrayList<>();
+    private final List<Workmate> workmates = new ArrayList<>();
     // Constructor
     public RestaurantDetailsAdapter() {}
     // Creates view for recycler view

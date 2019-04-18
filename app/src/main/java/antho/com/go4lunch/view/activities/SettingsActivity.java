@@ -3,9 +3,7 @@ package antho.com.go4lunch.view.activities;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import antho.com.go4lunch.MainActivity;
+
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.base.BaseActivity;
 

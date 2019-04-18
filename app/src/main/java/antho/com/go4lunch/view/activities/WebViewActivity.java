@@ -2,7 +2,6 @@ package antho.com.go4lunch.view.activities;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -10,7 +9,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.base.BaseActivity;
 import butterknife.BindView;
