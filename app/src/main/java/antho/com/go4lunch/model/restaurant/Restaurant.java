@@ -11,9 +11,6 @@ public abstract class Restaurant
     public abstract String name();
     @Json(name="place_id")
     public abstract String id();
-    @Json(name="geometry")
-    public abstract RestaurantGeometry geometry();
-    // Creates a Moshi adapter for this data model
     public static JsonAdapter<Restaurant> jsonAdapter(Moshi moshi)
     {
         return new AutoValue_Restaurant.MoshiJsonAdapter(moshi);

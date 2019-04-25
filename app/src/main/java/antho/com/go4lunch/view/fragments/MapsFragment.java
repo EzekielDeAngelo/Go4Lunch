@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import antho.com.go4lunch.base.BaseFragment;
 import antho.com.go4lunch.R;
@@ -24,6 +25,7 @@ import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import antho.com.go4lunch.viewmodel.factory.ViewModelFactory;
 import butterknife.ButterKnife;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +46,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.Objects;
 
@@ -57,7 +61,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     private Location mLastKnownLocation;
     private final LatLng mDefaultLocation = new LatLng(45.730518, 4.983453);
     private final Location defaultLocation = new Location("");
-
+    private static final String firebaseUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     private Place selectedPlace;
     private RestaurantViewModel restaurantViewModel;
     // Keys for storing activity state.
@@ -152,7 +156,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                 mLocationPermissionGranted = true;
             }
         }
-        updateLocationUI();
+        //updateLocationUI();
     }
     // Set the location controls on the map
     private void updateLocationUI()
@@ -215,33 +219,54 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     // Observe viewmodel to set the markers on the map
     private void observeViewModel()
     {
-
         restaurantViewModel.getPlaces().observe(Objects.requireNonNull(getActivity()), places ->
         {
             for (int i = 0; i < places.size(); i++)
             {
-                Double restaurantLat = Double.parseDouble(places.get(i).lat);
-                Double restaurantLng = Double.parseDouble(places.get(i).lng);
+                String id = places.get(i).placeId;
+
+                Double restaurantLat = Double.parseDouble(places.get(i).geometry().location().latitude());
+                Double restaurantLng = Double.parseDouble(places.get(i).geometry().location().longitude());
                 LatLng restaurantLatLng = new LatLng(restaurantLat, restaurantLng);
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(restaurantLatLng);
-                markerOptions.title(places.get(i).name());
 
+                LiveData<DataSnapshot> liveData = restaurantViewModel.getRestaurantDataSnapshotLiveData();
+                liveData.observe(this, dataSnapshot ->
+                {
+                    if (dataSnapshot != null)
+                    {
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(restaurantLatLng);
+                        markerOptions.title(String.valueOf(dataSnapshot.child(id).child("name").getValue()));
+                        if (dataSnapshot.child(id).child("selectedBy").getChildrenCount() > 0)
+                        {
+                            markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_content_enabled));
+                        }
+                        else
+                        {
+                            markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_content));
+                        }
+                        Marker m = mMap.addMarker(markerOptions);
+                        m.setTag(id);
+                    }
+                });
+
+              /*
                 if (places.get(i).selectedBy != null && places.get(i).selectedBy.size() > 0)
+                {
                     markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_content_enabled));
+                }
                 else
+                {
                     markerOptions.icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_content));
-                // Placing a marker on the touched position
-                Marker m = mMap.addMarker(markerOptions);
-                m.setTag(places.get(i).placeId);
-
+                }*/
+                //Marker m = mMap.addMarker(markerOptions);
+                //m.setTag(places.get(i).placeId);
             }
             mMap.setOnMarkerClickListener(marker ->
             {
-                restaurantViewModel.loadPlace((String) marker.getTag());
-                restaurantViewModel.getPlace().observe(Objects.requireNonNull(getActivity()), place ->
+                restaurantViewModel.getPlace((String) marker.getTag()).observe(Objects.requireNonNull(getActivity()), place ->
                 {
-                    if (selectedPlace != place)
+                    //if (selectedPlace != place)
                         selectedPlace = place;
                 });
                 return false;
@@ -249,6 +274,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         });
 
     }
+
     // Create marker bitmap from drawable content
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId)
     {
@@ -269,7 +295,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     {
         Intent intent = new Intent(getContext(), RestaurantDetailsActivity.class);
         intent.putExtra("id", (selectedPlace.placeId));
-        intent.putExtra("photo", selectedPlace.thumb);
+        intent.putExtra("photo", selectedPlace.photoUrl);
         intent.putExtra("name", selectedPlace.name());
         intent.putExtra("address", selectedPlace.address());
         intent.putExtra("phone", selectedPlace.phone());

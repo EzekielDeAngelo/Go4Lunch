@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import antho.com.go4lunch.R;
 import antho.com.go4lunch.base.BaseActivity;
 import butterknife.BindView;
-/** Activity to display restaurant website content as a web page **/
+/** Activity to display restaurant websiteButton content as a web page **/
 public class WebViewActivity extends BaseActivity
 {
     @BindView(R.id.webview) WebView webView;

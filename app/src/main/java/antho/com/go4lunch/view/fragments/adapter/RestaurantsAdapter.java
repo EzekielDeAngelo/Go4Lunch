@@ -84,10 +84,11 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         {
             this.place = place;
             name.setText(place.name());
+            stars.setText(String.valueOf(place.likeCount));
             address.setText(place.address().substring(0, place.address().indexOf(",")));
             Picasso.Builder builder = new Picasso.Builder(thumbnail.getContext());
             builder.downloader(new OkHttp3Downloader(thumbnail.getContext()));
-            builder.build().load(place.thumb)
+            builder.build().load(place.photoUrl)
                     .into(thumbnail);
         }
     }

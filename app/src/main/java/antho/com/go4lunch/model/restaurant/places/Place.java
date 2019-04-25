@@ -11,12 +11,8 @@ public abstract class Place
 {
     @Json(name="name")
     public abstract String name();
-
-    public String placeId;
-    public String lat;
-    public String lng;
-    /*@Json(name="geometry")
-    public abstract PlaceGeometry geometry();*/
+    @Json(name="geometry")
+    public abstract PlaceGeometry geometry();
     @Json(name="vicinity")
     public abstract String address();
     @Json(name="website")
@@ -25,17 +21,27 @@ public abstract class Place
     public abstract String phone();
     @Json(name="photos")
     public abstract List<PlacePhotos> photos();
-    public String thumb;
+    public String placeId;
+    public String photoUrl;
     public List<String> likedBy;
     public List<String> selectedBy;
     public boolean selected;
     public boolean like;
-
+    public int likeCount;
     // Creates a Moshi adapter for this data model
     public static JsonAdapter<Place> jsonAdapter(Moshi moshi)
     {
         return new AutoValue_Place.MoshiJsonAdapter(moshi);
     }
+    public List<String> getLikedBy()
+    {
+        return likedBy;
+    }
+    public void setLikedBy(List<String> likedBy)
+    {
+        this.likedBy = likedBy;
+    }
+
 }
 
 

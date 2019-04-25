@@ -110,6 +110,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         else
         {
             userName = user.getDisplayName();
+            workmateViewModel.writeNewUser(FirebaseAuth.getInstance().getCurrentUser());
             if (user.getPhotoUrl() != null)
             {
                 String photoUrl = user.getPhotoUrl().toString();
@@ -231,15 +232,15 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         RestaurantViewModel restaurantViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
         if (id != null)
         {
-            restaurantViewModel.loadPlace(id);
-            restaurantViewModel.getPlace().observe(this, place ->
+            //restaurantViewModel.loadPlace(id, null, null);
+            restaurantViewModel.getPlace(id).observe(this, place ->
             {
                 if (place != selectedPlace && !openIntent)
                 {
                     selectedPlace = place;
                     intent = new Intent(MainActivity.this, RestaurantDetailsActivity.class);
                     intent.putExtra("id", place.placeId);
-                    intent.putExtra("photo", place.thumb);
+                    intent.putExtra("photo", place.photoUrl);
                     intent.putExtra("name", place.name());
                     intent.putExtra("address", place.address());
                     intent.putExtra("phone", place.phone());

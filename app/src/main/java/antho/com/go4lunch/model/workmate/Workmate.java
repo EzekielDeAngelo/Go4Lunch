@@ -10,12 +10,13 @@ public class Workmate
     private String id;
     public String restaurantId;
 
-
+public String restaurantName;
     public Workmate(){}
-    public Workmate(/*String id,*/ String username, @Nullable String restaurantId) {
+    public Workmate(/*String id,*/ String username, @Nullable String restaurantId, @Nullable String restaurantName) {
         this.name = username;
         //this.id = id;
         this.restaurantId = restaurantId;
+        this.restaurantName = restaurantName;
 
     }
     public String getId() {
@@ -25,6 +26,7 @@ public class Workmate
     public void setId(String id) {
         this.id = id;
     }
+
 
 
 

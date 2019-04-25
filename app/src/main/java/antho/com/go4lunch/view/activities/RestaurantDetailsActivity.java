@@ -2,18 +2,20 @@ package antho.com.go4lunch.view.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,20 +28,21 @@ import antho.com.go4lunch.viewmodel.RestaurantViewModel;
 import antho.com.go4lunch.viewmodel.WorkmateViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 /** **/
 public class RestaurantDetailsActivity extends AppCompatActivity
 {
-    @BindView(R.id.photo) ImageView photo;
-    @BindView(R.id.name) TextView name;
-    @BindView(R.id.address) TextView address;
-    @BindView(R.id.select) ToggleButton select;
-    @BindView(R.id.call) Button call;
-    @BindView(R.id.website) Button website;
-    @BindView(R.id.like) ToggleButton like;
+    @BindView(R.id.name) TextView nameTextView;
+    @BindView(R.id.address) TextView addressTextView;
+    @BindView(R.id.photo) ImageView photoImageView;
+    @BindView(R.id.call) Button callButton;
+    @BindView(R.id.website) Button websiteButton;
+    @BindView(R.id.select) ToggleButton selectToggleButton;
+    @BindView(R.id.like) ToggleButton likeToggleButton;
     @BindView(R.id.restaurant_details_recyclerview) RecyclerView recyclerView;
-    private WorkmateViewModel viewModel;
+    private WorkmateViewModel workmateViewModel;
     private RestaurantViewModel restaurantViewModel;
+    private final String firebaseUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private String restaurantId;
     //
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -48,102 +51,99 @@ public class RestaurantDetailsActivity extends AppCompatActivity
         setContentView(R.layout.activity_restaurant_details);
         ButterKnife.bind(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        viewModel = ViewModelProviders.of(this).get("WorkmateViewModel", WorkmateViewModel.class);
 
-
-        if (getIntent().hasExtra("id"))
-        {
-            name.setText(getIntent().getStringExtra("name"));
-            address.setText(getIntent().getStringExtra("address"));
-            String url = getIntent().getStringExtra("photo");
-            Picasso.Builder builder = new Picasso.Builder (photo.getContext());
-            builder.downloader(new OkHttp3Downloader(photo.getContext()));
-            builder.build().load(url)
-                    .into(photo);
-        }
-        FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        workmateViewModel = ViewModelProviders.of(this).get("WorkmateViewModel", WorkmateViewModel.class);
         restaurantViewModel = ViewModelProviders.of(this).get("RestaurantViewModel", RestaurantViewModel.class);
-        //restaurantViewModel = ViewModelProviders.of(this, new ViewModelFactory(getIntent().getStringExtra("location"))).get("RestaurantViewModel", RestaurantViewModel.class);
-        select.setChecked(getIntent().getBooleanExtra("selected", false));
-        select.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked)
-            {
-                restaurantViewModel.selectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
+        restaurantId = getIntent().getStringExtra("id");
 
-                viewModel.selectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                /*viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
-                {
-                    workmate.restaurantId = getIntent().getStringExtra("name");
-                });*/
+        initUi();
+        observeViewModel();
+    }
+    //
+    private void initUi()
+    {
+        String restaurantName = getIntent().getStringExtra("name");
+        String restaurantPhoto = getIntent().getStringExtra("photo");
+        String restaurantAddress = getIntent().getStringExtra("address");
 
-                /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
-                {
-                    place.selectedBy.add(mFirebaseUser.getUid());
+        nameTextView.setText(restaurantName);
+        addressTextView.setText(restaurantAddress);
+        Picasso.Builder builder = new Picasso.Builder (photoImageView.getContext());
+        builder.downloader(new OkHttp3Downloader(photoImageView.getContext()));
+        builder.build().load(restaurantPhoto)
+                .into(photoImageView);
 
-                    Log.d("onSelectCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.selected)));
-                });*/
-            }
-            else
-            {
-                restaurantViewModel.deselectPlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                viewModel.deselectPlace(mFirebaseUser);
-     /*           viewModel.getWorkmate(mFirebaseUser.getUid()).observe(RestaurantDetailsActivity.this, workmate ->
-                {
-                });*/
-
-               /* restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
-                {
-                    place.selectedBy.remove(mFirebaseUser.getUid());
-                });*/
-            }
-        });
-        call.setOnClickListener(workmates ->
+        setOnClickListeners();
+        setOnCheckedChangeListeners();
+    }
+    //
+    private void setOnClickListeners()
+    {
+        callButton.setOnClickListener(workmates ->
         {
             Intent intent = new Intent(Intent.ACTION_CALL);
             intent.setData(Uri.parse("tel:" + getIntent().getStringExtra("phone")));
             startActivity(intent);
         });
-        website.setOnClickListener(workmates ->
+        websiteButton.setOnClickListener(workmates ->
         {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", getIntent().getStringExtra("website"));
+            intent.putExtra("url", getIntent().getStringExtra("websiteButton"));
             startActivity(intent);
         });
-
-        like.setChecked(getIntent().getBooleanExtra("like", false));
-        like.setOnCheckedChangeListener((buttonView, isChecked) -> {
+    }
+    //
+    private void setOnCheckedChangeListeners()
+    {
+        selectToggleButton.setChecked(getIntent().getBooleanExtra("selected", false));
+        selectToggleButton.setOnCheckedChangeListener((buttonView, isChecked) ->
+        {
             if (isChecked)
             {
-                restaurantViewModel.likePlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
-                {
-                    place.likedBy.add(mFirebaseUser.getUid());
-                    Log.d("onLikedCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.like)));
-                });*/
+                restaurantViewModel.selectPlace(restaurantId);
+                workmateViewModel.selectPlace(restaurantId);
             }
             else
             {
-                restaurantViewModel.dislikePlace(mFirebaseUser, getIntent().getStringExtra("id"));
-                /*restaurantViewModel.getPlace(getIntent().getStringExtra("id")).observe(RestaurantDetailsActivity.this, place ->
-                {
-                    place.likedBy.remove(mFirebaseUser.getUid());
-                    Log.d("onLikedCheckedChanged", String.valueOf(place.name() + " : " + String.valueOf(place.like)));
-                });*/
+                restaurantViewModel.deselectPlace(restaurantId);
+                workmateViewModel.deselectPlace();
             }
         });
-        observeViewModel();
+        likeToggleButton.setChecked(getIntent().getBooleanExtra("likeToggleButton", false));
+        likeToggleButton.setOnCheckedChangeListener((buttonView, isChecked) ->
+        {
+            if (isChecked)
+            {
+                restaurantViewModel.likePlace(getIntent().getStringExtra("id"));
+            }
+            else
+            {
+                restaurantViewModel.dislikePlace(getIntent().getStringExtra("id"));
+            }
+        });
     }
-
+    //
     private void observeViewModel()
     {
-
-        viewModel.getWorkmates().observe(this, workmates ->
+        workmateViewModel.getWorkmates().observe(this, workmates ->
         {
-
             recyclerView.setAdapter(new RestaurantDetailsAdapter());
             RestaurantDetailsAdapter adapter = (RestaurantDetailsAdapter) recyclerView.getAdapter();
             Objects.requireNonNull(adapter).setData(workmates, getIntent().getStringExtra("id"));
         });
+        /** **/
+        LiveData<DataSnapshot> liveData = restaurantViewModel.getRestaurantDataSnapshotLiveData();
+        liveData.observe(this, dataSnapshot ->
+        {
+            if (dataSnapshot != null) {
+                String ticker = dataSnapshot.child("ticker").getValue(String.class);
+                Log.d("prouta", String.valueOf(dataSnapshot.child(getIntent().getStringExtra("id")).child("selectedBy").child(firebaseUserId).getValue()));
+                //tvTicker.setText(ticker);
+                Float price = dataSnapshot.child("price").getValue(Float.class);
+                //tvPrice.setText(String.format(Locale.getDefault(), "%.2f", price));
+            }
+
+        });
+        /** **/
     }
 }

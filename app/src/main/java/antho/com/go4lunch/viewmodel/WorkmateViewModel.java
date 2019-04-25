@@ -1,4 +1,6 @@
 package antho.com.go4lunch.viewmodel;
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,8 +26,9 @@ public class WorkmateViewModel extends ViewModel
 {
     private final MutableLiveData<List<Workmate>> workmates;
     private final MutableLiveData<Workmate> workmate;
-    private DatabaseReference databaseReference;
-
+    //private DatabaseReference databaseReference;
+    private final String firebaseUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private static final DatabaseReference WORKMATES_REF = FirebaseDatabase.getInstance().getReference("workmates");
     // Constructor
     public WorkmateViewModel()
     {
@@ -49,24 +52,23 @@ public class WorkmateViewModel extends ViewModel
     private List<Workmate> wmList = new ArrayList<>();
 
     //
-    private void loadWorkmatesPerRestaurants()
-    {
-      wmList = workmates.getValue();
-    }
 
     private void loadWorkmate(String id)
     {
-        DatabaseReference workmateDatabaseReference = FirebaseDatabase.getInstance().getReference("workmate").child(id);
-        RxFirebaseDatabase.observeSingleValueEvent(workmateDatabaseReference, Workmate.class).subscribeOn(Schedulers.io()).subscribe(workmate::postValue);
+        //DatabaseReference workmateDatabaseReference = FirebaseDatabase.getInstance().getReference("workmate").child(id);
+        //DatabaseReference query = WORKMATES_REF.child(id);
+        //RxFirebaseDatabase.observeSingleValueEvent(query, Workmate.class).subscribeOn(Schedulers.io()).subscribe(workmate::postValue);
     }
-    private void loadWorkmates() {
+    private void loadWorkmates()
+    {
+        //DatabaseReference query = WORKMATES_REF;
+        //RxFirebaseDatabase.observeSingleValueEvent(query, Workmate.class).subscribe(workmate -> wmList.add(workmate));
 
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("workmate");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        WORKMATES_REF.addValueEventListener(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
                 // Get Post object and use the values to update the UI
                 dataSnapshot.getValue();
 
@@ -79,9 +81,9 @@ public class WorkmateViewModel extends ViewModel
                 }
                 workmates.postValue(wmList);
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
 
             }
         });
@@ -90,33 +92,15 @@ public class WorkmateViewModel extends ViewModel
     //
     public void writeNewUser(FirebaseUser user)
     {
-        databaseReference.child(user.getUid()).child("name").setValue(user.getDisplayName());
+        WORKMATES_REF.child(user.getUid()).child("name").setValue(user.getDisplayName());
     }
-    public void selectPlace(FirebaseUser user, String restaurantId)
+    public void selectPlace(String restaurantId)
     {
-       // loadWorkmate(user.getUid());
-        //if (databaseReference.child(user.getUid()).child("restaurantId").getKey() == restaurantId)
-
-        //selectedRestaurantId = restaurantId;
-
-        databaseReference.child(user.getUid()).child("restaurantId").setValue(restaurantId);
-
+        WORKMATES_REF.child(firebaseUserId).child("restaurantId").setValue(restaurantId);
     }
-    public void deselectPlace(FirebaseUser user)
-    {
-        //loadWorkmate(user.getUid());
-       // selectedRestaurantId = null;
-        //if (databaseReference.child(user.getUid()).child("restaurantId").getKey() == restaurantId)
-        //DatabaseReference workamteDatabaseReference = FirebaseDatabase.getInstance().getReference("workmate");
-        databaseReference.child(user.getUid()).child("restaurantId").removeValue();
 
-    }
-    /*public void likeRestaurant(FirebaseUser user, String restaurantId)
+    public void deselectPlace()
     {
-        databaseReference.child(user.getUid()).child("likedRestaurantsId").child(restaurantId).
+        WORKMATES_REF.child(firebaseUserId).child("restaurantId").removeValue();
     }
-    public void dislikeRestaurant(FirebaseUser user, String restaurantId)
-    {
-        databaseReference.child(user.getUid()).child("likedRestaurantsId").child("id").removeValue();
-    }*/
 }
