@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -27,7 +28,7 @@ public class WorkmateViewModel extends ViewModel
     private final MutableLiveData<List<Workmate>> workmates;
     private final MutableLiveData<Workmate> workmate;
     //private DatabaseReference databaseReference;
-    private final String firebaseUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    //private final String firebaseUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     private static final DatabaseReference WORKMATES_REF = FirebaseDatabase.getInstance().getReference("workmates");
     // Constructor
     public WorkmateViewModel()
@@ -96,11 +97,11 @@ public class WorkmateViewModel extends ViewModel
     }
     public void selectPlace(String restaurantId)
     {
-        WORKMATES_REF.child(firebaseUserId).child("restaurantId").setValue(restaurantId);
+        WORKMATES_REF.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("restaurantId").setValue(restaurantId);
     }
 
     public void deselectPlace()
     {
-        WORKMATES_REF.child(firebaseUserId).child("restaurantId").removeValue();
+        WORKMATES_REF.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("restaurantId").removeValue();
     }
 }

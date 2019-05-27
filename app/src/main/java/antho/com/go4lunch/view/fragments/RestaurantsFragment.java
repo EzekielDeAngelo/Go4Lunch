@@ -47,7 +47,6 @@ public class RestaurantsFragment extends BaseFragment
     // Observe viewmodel to update restaurant recycler view
     private void observeViewModel()
     {
-
         viewModel.getPlaces().observe(this, places ->
         {
 

@@ -68,7 +68,6 @@ public class RestaurantDetailsAdapter extends RecyclerView.Adapter<RestaurantDet
         {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
         }
         // Bind data entries to appropriate view items
         void bind(Workmate workmate)

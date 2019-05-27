@@ -131,19 +131,15 @@ public class RestaurantDetailsActivity extends AppCompatActivity
             RestaurantDetailsAdapter adapter = (RestaurantDetailsAdapter) recyclerView.getAdapter();
             Objects.requireNonNull(adapter).setData(workmates, getIntent().getStringExtra("id"));
         });
-        /** **/
+
         LiveData<DataSnapshot> liveData = restaurantViewModel.getRestaurantDataSnapshotLiveData();
         liveData.observe(this, dataSnapshot ->
         {
-            if (dataSnapshot != null) {
+            if (dataSnapshot != null)
+            {
                 String ticker = dataSnapshot.child("ticker").getValue(String.class);
                 Log.d("prouta", String.valueOf(dataSnapshot.child(getIntent().getStringExtra("id")).child("selectedBy").child(firebaseUserId).getValue()));
-                //tvTicker.setText(ticker);
-                Float price = dataSnapshot.child("price").getValue(Float.class);
-                //tvPrice.setText(String.format(Locale.getDefault(), "%.2f", price));
             }
-
         });
-        /** **/
     }
 }
