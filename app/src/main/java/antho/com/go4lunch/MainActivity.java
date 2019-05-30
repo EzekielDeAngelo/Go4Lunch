@@ -79,19 +79,32 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         // Create a new Places client instance.
 
         workmateViewModel = ViewModelProviders.of(this).get(WorkmateViewModel.class);
-        initFirebaseAuth();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this , this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null)
+        {
 
-        fragmentManager = getSupportFragmentManager();
-        int selectedIndex = savedInstanceState == null ? 0 : savedInstanceState.getInt(SELECTED_INDEX_KEY);
-        loadFirstFragment(selectedIndex);
+            startActivity(new Intent(this, SignInActivity.class));
+            /*if (user != null)
+                workmateViewModel.writeNewUser(FirebaseAuth.getInstance().getCurrentUser());*/
+            finish();
+        }
+        //initFirebaseAuth();
+else {
+            fragmentManager = getSupportFragmentManager();
+            int selectedIndex = savedInstanceState == null ? 0 : savedInstanceState.getInt(SELECTED_INDEX_KEY);
+            loadFirstFragment(selectedIndex);
+            setUpNavigationDrawer();
 
-        setUpBottomNavigation();
-
+            setUpBottomNavigation();
+        }
     }
     // Initialize Firebase Auth
     private void initFirebaseAuth()
     {
-        user = FirebaseAuth.getInstance().getCurrentUser();
         // Set default user as anonymous.
         userName = ANONYMOUS;
         // Write a message to the database
@@ -103,19 +116,20 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         {
             // Not signed in, launch the Sign In activity
             startActivity(new Intent(this, SignInActivity.class));
-            if (user != null)
-                workmateViewModel.writeNewUser(FirebaseAuth.getInstance().getCurrentUser());
+            /*if (user != null)
+                workmateViewModel.writeNewUser(FirebaseAuth.getInstance().getCurrentUser());*/
             finish();
         }
         else
         {
-            userName = user.getDisplayName();
+           /* userName = user.getDisplayName();
             workmateViewModel.writeNewUser(FirebaseAuth.getInstance().getCurrentUser());
             if (user.getPhotoUrl() != null)
             {
                 String photoUrl = user.getPhotoUrl().toString();
-            }
-            setUpNavigationDrawer();
+            }*/
+
+           // setUpNavigationDrawer();
         }
     }
     // Set up drawer layout and navigation view
@@ -129,7 +143,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         navigationView.setNavigationItemSelectedListener(this);
         View navHeader = navigationView.getHeaderView(0);
         TextView userTextView = navHeader.findViewById(R.id.username);
-        userTextView.setText(user.getDisplayName());
+        userTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         ImageView userImageView = navHeader.findViewById(R.id.img_profile);
     }
     // Loads fragment based on index given as parameter
@@ -287,7 +301,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         int id = item.getItemId();
         if (id == R.id.nav_selection)
         {
-            workmateViewModel.getWorkmate(user.getUid()).observe(this, workmate ->
+            workmateViewModel.getWorkmate(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(this, workmate ->
             {
                 if (workmate.restaurantId != null)
                     OpenRestaurantDetailsActivity(workmate.restaurantId);

@@ -28,6 +28,9 @@
     <string name="call">CALL</string>
     <string name="website">WEBSITE</string>
     <string name="like">LIKE</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
 
 
 </resources>

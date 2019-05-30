@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
@@ -38,8 +40,13 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+
 import antho.com.go4lunch.MainActivity;
 import antho.com.go4lunch.R;
+import antho.com.go4lunch.viewmodel.WorkmateViewModel;
+import butterknife.BindView;
+
 /** Handles google, facebook and twitter sign in behavior **/
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
 {
@@ -47,19 +54,28 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private FirebaseAuth mFirebaseAuth;
     private CallbackManager mCallbackManager;
     private GoogleApiClient mGoogleApiClient;
+    @BindView(R.id.password) EditText password;
+    @BindView(R.id.email) EditText email;
+    @BindView(R.id.sign_in_button) Button signInButton;
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
+    private WorkmateViewModel workmateViewModel;
     // Set on click listener for sign in buttons and get firebase instance
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        workmateViewModel = ViewModelProviders.of(this).get(WorkmateViewModel.class);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(getString(R.string.twitter_consumer_key), getString(R.string.twitter_consumer_secret));
         TwitterConfig twitterConfig = new TwitterConfig.Builder(this)
                 .twitterAuthConfig(authConfig)
                 .build();
         Twitter.initialize(twitterConfig);
         setContentView(R.layout.activity_sign_in);
+        signInButton = findViewById(R.id.sign_in_button);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        //signInButton.setOnClickListener(this);
         mFirebaseAuth = FirebaseAuth.getInstance();
         // Configure Google Sign In
         Button googleSignInButton = findViewById(R.id.google_login_button);
@@ -120,6 +136,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         if (v.getId() == R.id.google_login_button) {
             signIn();
         }
+        if (v.getId() == R.id.sign_in_button)
+        login();
+
     }
     // Launch sign in intent from google sign in API
     private void signIn()
@@ -174,6 +193,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                     else
                     {
                         FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                        workmateViewModel.writeNewUser(user);
                         startActivity(new Intent(SignInActivity.this, MainActivity.class));
                         finish();
                     }
@@ -192,6 +212,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                        workmateViewModel.writeNewUser(user);
                         startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     } else
                     {
@@ -217,6 +238,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                        workmateViewModel.writeNewUser(user);
                         startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     }
                     else
@@ -228,6 +250,44 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
                     }
                 });
+    }
+
+
+
+    // Logic to sign in user with credentials entered
+    private void login()
+    {
+        String emailText = email.getText().toString();
+        String passwordText = password.getText().toString();
+        mFirebaseAuth.signInWithEmailAndPassword(emailText, passwordText)
+                .addOnCompleteListener(this, task ->
+                {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(user.getEmail()).build();
+                        user.updateProfile(profileUpdates);
+                        Log.d(user.getDisplayName(), user.getDisplayName());
+
+                        updateUI(user);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                      //  showToast("Authentication failed");
+                        updateUI(null);
+                    }
+                });
+    }
+    // Load main activity when sign in has been successfully done
+    private void updateUI(FirebaseUser user)
+    {
+        if (user != null)
+        {
+            workmateViewModel.writeNewUser(user);
+            startActivity(new Intent(SignInActivity.this, MainActivity.class));
+        }
     }
 }
 
