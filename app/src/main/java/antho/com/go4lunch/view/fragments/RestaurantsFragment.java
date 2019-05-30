@@ -50,7 +50,10 @@ public class RestaurantsFragment extends BaseFragment
         viewModel.getPlaces().observe(this, places ->
         {
 
-            for (int i = 0 ; i < places.size() ; i++)
+            restaurantRecyclerView.setAdapter(new RestaurantsAdapter(((RestaurantsAdapter.OnRestaurantClickedListener) getActivity())));
+            RestaurantsAdapter adapter = (RestaurantsAdapter) restaurantRecyclerView.getAdapter();
+            Objects.requireNonNull(adapter).setData(places);
+            /*for (int i = 0 ; i < places.size() ; i++)
             {
                 String id = places.get(i).placeId;
 
@@ -58,10 +61,9 @@ public class RestaurantsFragment extends BaseFragment
                 placeLiveData.observe(this, place ->
                 {
                     if (place != null) {
-                        Log.d("PROUTTAMERELAPUTE", place.placeId);
+
                         if (place.likeCount > 0)
                         {
-                            Log.d("PROUTTAMERELAPUTE", place.placeId);
                             restaurantRecyclerView.setAdapter(new RestaurantsAdapter(((RestaurantsAdapter.OnRestaurantClickedListener) getActivity())));
                             RestaurantsAdapter adapter = (RestaurantsAdapter) restaurantRecyclerView.getAdapter();
                             Objects.requireNonNull(adapter).setData(places);
@@ -69,7 +71,7 @@ public class RestaurantsFragment extends BaseFragment
                         }
                     }
                 });
-            }
+            }*/
 
 
         });

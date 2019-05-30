@@ -50,7 +50,7 @@ public class RestaurantViewModel extends ViewModel
     private static final int photoMinHeight = 3000;
 
     private final FirebaseQueryLiveData restaurantLiveData = new FirebaseQueryLiveData(RESTAURANTS_REF);
-    private final LiveData<Place> placeLiveData = Transformations.map(restaurantLiveData, new Deserializer());
+    /*private final LiveData<Place> placeLiveData = Transformations.map(restaurantLiveData, new Deserializer());
 
     private class Deserializer implements Function<DataSnapshot, Place>
     {
@@ -65,7 +65,7 @@ public class RestaurantViewModel extends ViewModel
     public LiveData<Place> getPlaceLiveData()
     {
         return placeLiveData;
-    }
+    }*/
     //
     @NonNull
     public LiveData<DataSnapshot> getRestaurantDataSnapshotLiveData()

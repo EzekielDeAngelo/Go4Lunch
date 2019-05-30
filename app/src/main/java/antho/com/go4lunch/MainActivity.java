@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             finish();
         }
         //initFirebaseAuth();
-else {
+        else {
             fragmentManager = getSupportFragmentManager();
             int selectedIndex = savedInstanceState == null ? 0 : savedInstanceState.getInt(SELECTED_INDEX_KEY);
             loadFirstFragment(selectedIndex);
